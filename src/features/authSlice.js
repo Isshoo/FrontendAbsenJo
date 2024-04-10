@@ -15,9 +15,9 @@ export const loginUser = createAsyncThunk(
   "user/loginUser",
   async (user, thunkAPI) => {
     try {
-      const response = await axios.post("http://localhost:5011/login", {
-        Username: user.Username,
-        Password: user.Password,
+      const response = await axios.post("http://localhost:5000/login", {
+        username: user.Username,
+        password: user.Password,
       });
       return response.data;
     } catch (error) {
@@ -32,7 +32,7 @@ export const loginUser = createAsyncThunk(
 // Action async untuk mendapatkan data pengguna
 export const getMe = createAsyncThunk("user/getMe", async (_, thunkAPI) => {
   try {
-    const response = await axios.get("http://localhost:5011/me");
+    const response = await axios.get("http://localhost:5000/me");
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -44,7 +44,7 @@ export const getMe = createAsyncThunk("user/getMe", async (_, thunkAPI) => {
 
 // Action async untuk logout
 export const LogOut = createAsyncThunk("user/LogOut", async () => {
-  await axios.delete("http://localhost:5011/logout");
+  await axios.delete("http://localhost:5000/logout");
   return null;
 });
 
