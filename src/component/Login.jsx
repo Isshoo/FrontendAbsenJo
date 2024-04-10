@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser, reset } from "../features/authSlice";
-import LogoAbsenJo from "../component/LogoAbsenJo.png";
-import BgLogin from "../component/bgAbsen.jpeg";
+import LogoAbsenJo from "../img/LogoAbsenJo.png";
+import BgLogin from "../img/bgAbsen.jpeg";
 
 
 const Login = () => {
@@ -52,7 +52,7 @@ const Login = () => {
               className="box h-[600px] w-[350px] bg-opacity-80 bg-blue-300 shadow-lg rounded-lg p-10"
             >
               <div className="flex justify-center">
-                <img className="h-[220px] w-[220px] flex justify-center"
+                <img className="h-[220px] w-[220px] flex justify-center drop-shadow-sm"
                 src={LogoAbsenJo} alt="" />
               </div>
 

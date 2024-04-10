@@ -6,6 +6,7 @@ import DataDiriPage from "./pages/DataDiriPage";
 import IsiDaftarHadirPage from "./pages/IsiDaftarHadirPage";
 import PengajuanPage from "./pages/PengajuanPage";
 import RiwayatKehadiranPage from "./pages/RiwayatKehadiranPage";
+import DataGuruStafPage from "./pages/DataGuruStafPage";
 
 
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/isidaftarhadir" element={<IsiDaftarHadirPage/>} />
           <Route path="/pengajuan" element={<PengajuanPage/>} />
           <Route path="/riwayatkehadiran" element={<RiwayatKehadiranPage/>} />
+          <Route path="/daftarguru" element={<DataGuruStafPage/>} />
         </Routes>
       </BrowserRouter>
     </div>

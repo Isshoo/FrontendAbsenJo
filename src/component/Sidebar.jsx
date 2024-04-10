@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'; 
+import {useSelector} from 'react-redux'
 
 const Sidebar = () => {
-     const [showSubMenu, setShowSubMenu] = useState(false);
+     const {user}=useSelector((state)=>state.auth)
   return (
-    <div className="mt-12">
+    <div className="mt-[80px]">
       <div className="bg-white w-full px-0 flex justify-center">
         <div className="w-full">
           <div className="mt-2 border-t-2 border-t-black p-2">
@@ -15,16 +16,27 @@ const Sidebar = () => {
               Dashboard
             </Link>
           </div>
-
-          <div className="mt-2 border-t-2 border-t-black p-2 ">
-            <p>Profil</p>
-            <div className="ml-3">
+          
+            <div className="mt-2 border-t-2 p-2 border-t-black">
+            <p className="text-xs ml-1 text-gray-400 ">
+              Profil</p>
+            <div className="ml-3 ">
+            {user&&user.role === 'Guru' && (
               <Link
                 to="/datadiri"
                 className="hover:bg-blue-500 hover:text-white rounded-md p-2 text-base block w-full"
               >
                 Data Diri
               </Link>
+              )}
+              {user&&user.role === 'Admin' && (
+              <Link
+                to="/daftarguru"
+                className="hover:bg-blue-500 hover:text-white rounded-md p-2 text-base block w-full"
+              >
+                Data Guru dan Staf
+              </Link>
+              )}
               <Link
                 to="/ubahpassword"
                 className="hover:bg-blue-500 hover:text-white rounded-md p-2 text-base block w-full"
@@ -33,8 +45,10 @@ const Sidebar = () => {
               </Link>
             </div>
           </div>
+          
+          
           <div className="mt-2 border-t-2 border-t-black p-2 ">
-            <p>Menu Utama</p>
+            <p className="text-xs ml-1 text-gray-400">Menu Utama</p>
             <div className="ml-3">
               <Link
                 to="/isidaftarhadir"

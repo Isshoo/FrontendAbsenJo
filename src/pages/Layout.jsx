@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
         <div
           className="p-3 pt-5"
           style={{
-            width: "240px",
+            width: "275px",
             borderRight: "1px solid rgb(220, 220, 220)",
           }}
         >
@@ -18,7 +18,7 @@ const Layout = ({ children }) => {
         </div>
       <div className="flex-1 p-5">
         <main
-          className="min-h-screen mt-[60px]"
+          className="min-h-screen mt-[90px]"
           style={{ minHeight: "100vh", Width: "100%" }}
         >
           {children}
