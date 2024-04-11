@@ -18,11 +18,8 @@ const Dashboard = () => {
       if (isError) {
         navigate("/");
       }
-      if(user && user.role !=="Admin"){
-        navigate("/")
-      }
+
     }, [isError, navigate]);
-    console.log("user :"+user);
   return (
     <Layout>
         <DashboardGuru />

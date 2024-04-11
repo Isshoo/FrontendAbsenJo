@@ -1,12 +1,12 @@
 import React,{useEffect, useState} from 'react'
 import Layout from './Layout'
-import DataDiri from '../component/DataDiri'
+import DaftarPengajuan from '../component/DaftarPengajuan'
 import {useDispatch, useSelector} from 'react-redux'
 import { getMe } from '../features/authSlice'
 import {useNavigate} from 'react-router-dom'
 
-const DataDiriPage = () => {
-  const dispatch = useDispatch();
+const DaftarPengajuanPage = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { isError, user } = useSelector((state) => state.auth);
 
@@ -22,9 +22,9 @@ const DataDiriPage = () => {
     }, [isError, navigate]);
   return (
     <Layout>
-        <DataDiri />
+        <DaftarPengajuan />
     </Layout>
   )
 }
 
-export default DataDiriPage
+export default DaftarPengajuanPage
