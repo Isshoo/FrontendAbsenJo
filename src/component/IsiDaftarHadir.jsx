@@ -17,6 +17,14 @@ const IsiDaftarHadir = () => {
   };
   setInterval(updateTime, 1000);
 
+  let date = new Date().getDate();
+  const [currentDate, setCurrentDate] = useState(date);
+
+  const updateDate = () => {
+    let date = new Date().getDate();
+    setCurrentDate(date);
+  };
+  setInterval(updateDate, 1000);
 
   let month = new Date().getMonth();
   const [currentMonth, setCurrentMonth] = useState(month);
@@ -43,8 +51,8 @@ const IsiDaftarHadir = () => {
     ];
     return bulanDalamSetahun[bulan];
   }
-  
-  const bulan = currentMonth; 
+
+  const bulan = currentMonth;
   const namaBulan = getNamaBulan(bulan);
 
   let year = new Date().getFullYear();
@@ -52,7 +60,6 @@ const IsiDaftarHadir = () => {
   const updateYear = () => {
     let year = new Date().getFullYear();
     setCurrentYear(year);
-
   };
   setInterval(updateYear, 1000);
 
@@ -61,10 +68,9 @@ const IsiDaftarHadir = () => {
   const updateDay = () => {
     let day = new Date().getDay();
     setCurrentDay(day);
-
   };
   setInterval(updateDay, 1000);
-  
+
   function getNamaHari(hari) {
     const hariDalamSeminggu = [
       "Minggu",
@@ -77,9 +83,15 @@ const IsiDaftarHadir = () => {
     ];
     return hariDalamSeminggu[hari];
   }
-  
-  const hari = currentDay; 
+
+  const hari = currentDay;
   const namaHari = getNamaHari(hari);
+
+  const extractTime = (masuk) => {
+    const jam = masuk.slice(8, 10);
+    const menit = masuk.slice(10, 12);
+    return `${jam}:${menit}`;
+  };
 
   const Hadir = async () => {
     try {
@@ -122,20 +134,40 @@ const IsiDaftarHadir = () => {
       <h1 className="text-xl my-4">Daftar Hadir</h1>
       <div className="border border-slate-950 p-6 ">
         <h1 className="text-center text-6xl mb-2">{currentTime}</h1>
-        <h1 className="text-center text-lg mb-9">{namaHari},{" "}{currentDay}{" "}{namaBulan}{" "}{currentYear}</h1>
-        <div className="flex justify-evenly ">
-        <button onClick={Hadir} className="border-2 p-3 text-3xl">
-          Masuk
-        </button>
-        {keluarData && keluarData.keluar === "-" && (
-          // Tampilkan tombol "Keluar" jika keluarData tidak null dan properti keluar tidak sama dengan "-"
-          <button
-            onClick={() => Keluar(keluarData.id_kehadiran)}
-            className="text-black text-3xl border-2 p-3"
-          >
-            Keluar
-          </button>
-        )}
+        <h1 className="text-center text-lg mb-9">
+          {namaHari}, {currentDate} {namaBulan} {currentYear}
+        </h1>
+        <div className="flex justify-evenly mt-2">
+          <div className="flex justify-center">
+            <div>
+              {keluarData && keluarData.keluar === "-" && (
+                <h1 className=" text-center text-2xl">
+                  {keluarData && extractTime(keluarData.masuk)}{" "}
+                </h1>
+              )}
+              <button
+                onClick={Hadir}
+                className="border-2 p-3 text-3xl hover:bg-blue-500 active:bg-blue-600 hover:text-white"
+              >
+                Masuk
+              </button>
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <div>
+              <h1 className=" text-center text-2xl">- : -</h1>
+
+              {keluarData && keluarData.keluar === "-" && (
+                // Tampilkan tombol "Keluar" jika keluarData tidak null dan properti keluar tidak sama dengan "-"
+                <button
+                  onClick={() => Keluar(keluarData.id_kehadiran)}
+                  className="text-black text-3xl border-2 p-3 hover:bg-blue-500 active:bg-blue-600 hover:text-white"
+                >
+                  Keluar
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
