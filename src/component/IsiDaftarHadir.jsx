@@ -1,21 +1,145 @@
-import React, { useState } from 'react'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { IoHome } from "react-icons/io5";
 
 const IsiDaftarHadir = () => {
+  const { user } = useSelector((state) => state.auth);
+  const [keluarData, setKeluarData] = useState(null); // Menyimpan data keluar dari server
+  const id_user = user && (user.id_guru || user.id_kepsek);
+
   let time = new Date().toLocaleTimeString();
   const [currentTime, setCurrentTime] = useState(time);
 
   const updateTime = () => {
     let time = new Date().toLocaleTimeString();
     setCurrentTime(time);
+  };
+  setInterval(updateTime, 1000);
 
+
+  let month = new Date().getMonth();
+  const [currentMonth, setCurrentMonth] = useState(month);
+  const updateMonth = () => {
+    let month = new Date().getMonth();
+    setCurrentMonth(month);
+  };
+  setInterval(updateMonth, 1000);
+
+  function getNamaBulan(bulan) {
+    const bulanDalamSetahun = [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+    return bulanDalamSetahun[bulan];
   }
-  setInterval(updateTime, 1000)
+  
+  const bulan = currentMonth; 
+  const namaBulan = getNamaBulan(bulan);
+
+  let year = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(year);
+  const updateYear = () => {
+    let year = new Date().getFullYear();
+    setCurrentYear(year);
+
+  };
+  setInterval(updateYear, 1000);
+
+  let day = new Date().getDay();
+  const [currentDay, setCurrentDay] = useState(day);
+  const updateDay = () => {
+    let day = new Date().getDay();
+    setCurrentDay(day);
+
+  };
+  setInterval(updateDay, 1000);
+  
+  function getNamaHari(hari) {
+    const hariDalamSeminggu = [
+      "Minggu",
+      "Senin",
+      "Selasa",
+      "Rabu",
+      "Kamis",
+      "Jumat",
+      "Sabtu",
+    ];
+    return hariDalamSeminggu[hari];
+  }
+  
+  const hari = currentDay; 
+  const namaHari = getNamaHari(hari);
+
+  const Hadir = async () => {
+    try {
+      await axios.post("http://localhost:5000/kehadiran", {
+        id_guru: id_user,
+      });
+      console.log("Hadir berhasil");
+      getKeluar(id_user);
+    } catch (error) {
+      console.log("gagal hadir:", error);
+    }
+  };
+
+  const Keluar = async (id_kehadiran) => {
+    try {
+      await axios.patch(`http://localhost:5000/kehadiran/${id_kehadiran}`);
+      getKeluar(id_user);
+      window.location.reload();
+    } catch (error) {
+      console.log("gagal keluar:", error);
+    }
+  };
+  const getKeluar = async (id_guru) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/kehadiran/baru/${id_guru}`
+      );
+      setKeluarData(response.data);
+    } catch (error) {
+      console.log("gagal ambil data keluar:", error);
+    }
+  };
+
+  useEffect(() => {
+    getKeluar(id_user);
+  }, [id_user]);
 
   return (
-    <div>
-      <h1>{currentTime}</h1>
+    <div className="">
+      <h1 className="text-xl my-4">Daftar Hadir</h1>
+      <div className="border border-slate-950 p-6 ">
+        <h1 className="text-center text-6xl mb-2">{currentTime}</h1>
+        <h1 className="text-center text-lg mb-9">{namaHari},{" "}{currentDay}{" "}{namaBulan}{" "}{currentYear}</h1>
+        <div className="flex justify-evenly ">
+        <button onClick={Hadir} className="border-2 p-3 text-3xl">
+          Masuk
+        </button>
+        {keluarData && keluarData.keluar === "-" && (
+          // Tampilkan tombol "Keluar" jika keluarData tidak null dan properti keluar tidak sama dengan "-"
+          <button
+            onClick={() => Keluar(keluarData.id_kehadiran)}
+            className="text-black text-3xl border-2 p-3"
+          >
+            Keluar
+          </button>
+        )}
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default IsiDaftarHadir
+export default IsiDaftarHadir;
