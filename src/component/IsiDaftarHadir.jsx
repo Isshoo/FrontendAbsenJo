@@ -131,8 +131,10 @@ const IsiDaftarHadir = () => {
 
   return (
     <div className="">
-      <h1 className="text-xl my-4">Daftar Hadir</h1>
-      <div className="border border-slate-950 p-6 ">
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl my-4">Daftar Hadir</h1>
+      </div>
+      <div className="border border-slate-950 p-6 mt-10">
         <h1 className="text-center text-6xl mb-2">{currentTime}</h1>
         <h1 className="text-center text-lg mb-9">
           {namaHari}, {currentDate} {namaBulan} {currentYear}

@@ -37,8 +37,6 @@ const RiwayatKehadiran = () => {
     );
   };
 
-  
-
   useEffect(() => {
     getGuru();
     getKepsek();
@@ -46,7 +44,10 @@ const RiwayatKehadiran = () => {
   }, [idUser]);
   return (
     <div>
-      <h1 className="my-4 text-xl">Riwayat Kehadiran</h1>
+      <div className="flex items-center">
+        <h1 className="my-4 text-xl">Riwayat Kehadiran</h1>
+        <div></div>
+      </div>
       <div className="border border-slate-700 p-3">
         <button className="flex border border-slate-600 py-1 px-3 items-center">
           {" "}

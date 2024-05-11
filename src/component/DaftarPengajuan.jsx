@@ -1,12 +1,11 @@
-import React from 'react'
-
+import React from "react";
 
 const DaftarPengajuan = () => {
   return (
     <div>
-      <h1>Daftar Pengajuan</h1>
+      <h1 className="my-4 text-xl">Daftar Pengajuan</h1>
     </div>
-  )
-}
+  );
+};
 
-export default DaftarPengajuan
+export default DaftarPengajuan;

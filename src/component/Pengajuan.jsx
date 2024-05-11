@@ -86,17 +86,24 @@ const Pengajuan = () => {
 
   return (
     <div className="">
+      <div className="flex items-center">
+        <h1 className="mt-4 mb-3 text-xl">Pengajuan</h1>
+        <div></div>
+      </div>
       {user && user.role === "Guru" && (
         <div>
-          <button
-            type="button"
-            className="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-black shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
-            onClick={openModal}
-            data-twe-ripple-init
-            data-twe-ripple-color="light"
-          >
-            Tambah Pengajuan
-          </button>
+          <div className="flex justify-between">
+            <div></div>
+            <button
+              type="button"
+              className="bg-blue-500 hover:bg-blue-700 text-white inline-block border mb-2 rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal  shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
+              onClick={openModal}
+              data-twe-ripple-init
+              data-twe-ripple-color="light"
+            >
+              Tambah Pengajuan
+            </button>
+          </div>
           {showModal && (
             <div className="fixed left-0 top-0 z-[1055] h-full w-full bg-black bg-opacity-20 flex justify-center items-center">
               <div className="bg-white p-8 rounded-md shadow-md">
@@ -113,7 +120,7 @@ const Pengajuan = () => {
                         Pilih Pengajuan
                       </option>
                       <option value="Sakit">Sakit</option>
-                      <option value="Izin Kusus">Izin Kusus</option>
+                      <option value="Izin Kusus">Izin Khusus</option>
                       <option value="Cuti">Cuti</option>
                     </select>
                   </div>
@@ -246,7 +253,9 @@ const Pengajuan = () => {
                         </button>
                       )}
                       {items && items.validasi === "Sudah Divalidasi" && (
-                        <h1 className="p-2 border w-full text-center bg-green-500 text-white">Telah Divalidasi</h1>
+                        <h1 className="p-2 border w-full text-center bg-green-500 text-white">
+                          Telah Divalidasi
+                        </h1>
                       )}
                     </td>
                   </tr>
