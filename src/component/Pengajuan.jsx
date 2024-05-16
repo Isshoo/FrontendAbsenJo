@@ -176,7 +176,7 @@ const Pengajuan = () => {
             >
               <div className="flex justify-between items-center">
                 <h1>{pengajuan && pengajuan.jenis}</h1>
-                <h1>{pengajuan && pengajuan.validasi}</h1>
+                <h1 className="">{pengajuan && pengajuan.validasi}</h1>
               </div>
               <h1>{pengajuan && pengajuan.keterangan}</h1>
               <div className="flex justify-between items-center">

@@ -7,7 +7,10 @@ import IsiDaftarHadirPage from "./pages/IsiDaftarHadirPage";
 import PengajuanPage from "./pages/PengajuanPage";
 import RiwayatKehadiranPage from "./pages/RiwayatKehadiranPage";
 import DataGuruStafPage from "./pages/DataGuruStafPage";
-import DaftarPengajuanPage from "./pages/DaftarPengajuanPage";
+
+import JadwalPiketPage from "./pages/JadwalPiketPage";
+import DetailPage from "./pages/DetailPage";
+
 
 
 
@@ -25,7 +28,8 @@ function App() {
           <Route path="/pengajuan" element={<PengajuanPage/>} />
           <Route path="/riwayatkehadiran" element={<RiwayatKehadiranPage/>} />
           <Route path="/daftarguru" element={<DataGuruStafPage/>} />
-          <Route path="/daftarpengajuan" element={<DaftarPengajuanPage/>} />
+          <Route path="/detail/:id" element={<DetailPage/>}/>
+          <Route path="/jadwalpiket" element={<JadwalPiketPage/>} />
         </Routes>
       </BrowserRouter>
     </div>

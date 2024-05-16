@@ -9,6 +9,9 @@ const DataDiri = () => {
   const ttl = user && user.ttl;
   const jenisKelamin = user && user.jenis_kelamin;
   const foto = user && user.url;
+  const noHP = user && user.noHP;
+  const agama = user && user.agama;
+  const thnMasuk = user && user.thnMasuk;
   return (
     <div>
       <div className="flex justify-between items-center pr-5">
@@ -34,7 +37,7 @@ const DataDiri = () => {
       <div className="px-32 mt-44">
         <table className="w-full text-left ">
           <tr className="h-16">
-            <td className="w-52">
+            <td className="w-44">
               <h1 className="font-bold text-blue-500">Nama</h1>
             </td>
             <td className="w-10">
@@ -54,6 +57,17 @@ const DataDiri = () => {
             </td>
             <td className="border-b-2">
               <h1>{NIP}</h1>
+            </td>
+          </tr>
+          <tr className="h-16">
+            <td>
+              <h1 className="font-bold text-blue-500">Tahun Masuk</h1>
+            </td>
+            <td>
+              <h1>:</h1>
+            </td>
+            <td className="border-b-2">
+              <h1>{thnMasuk}</h1>
             </td>
           </tr>
           <tr className="h-16">
@@ -87,6 +101,28 @@ const DataDiri = () => {
             </td>
             <td className="border-b-2">
               <h1>{jenisKelamin}</h1>
+            </td>
+          </tr>
+          <tr className="h-16">
+            <td>
+              <h1 className="font-bold text-blue-500">noHP</h1>
+            </td>
+            <td>
+              <h1>:</h1>
+            </td>
+            <td className="border-b-2">
+              <h1>{noHP}</h1>
+            </td>
+          </tr>
+          <tr className="h-16">
+            <td>
+              <h1 className="font-bold text-blue-500">Agama</h1>
+            </td>
+            <td>
+              <h1>:</h1>
+            </td>
+            <td className="border-b-2">
+              <h1>{agama}</h1>
             </td>
           </tr>
         </table>
