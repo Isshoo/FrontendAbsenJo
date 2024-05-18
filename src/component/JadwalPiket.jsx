@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const JadwalPiket = () => {
-  const [jadwalPiket, setJadwalPiket] = useState([]);
-  const [formData, setFormData] = useState({
-    id_guru: "",
-    tanggal: "",
-    keterangan: "",
-  });
+  const [tanggal, setTanggal] = useState("");
+  const [id_guru, setId_guru] = useState("");
+  const [keterangan, setKeterangan] = useState("");
+  const [piket, setPiket] = useState([]);
+
   const [showForm, setShowForm] = useState(false);
   const [guruList, setGuruList] = useState([]);
 
@@ -22,33 +23,25 @@ const JadwalPiket = () => {
     };
 
     fetchGuruList();
+    getPiket();
   }, []);
 
-  const createPiket = async (data) => {
+  const createPiket = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/piket", data);
-      setJadwalPiket([...jadwalPiket, response.data]);
-    } catch (error) {
-      console.error("Error creating piket:", error);
-    }
-  };
-
-  const handleCreatePiket = async (e) => {
-    e.preventDefault();
-    try {
-      await createPiket(formData);
-      setFormData({
-        id_guru: "",
-        tanggal: "",
-        keterangan: "",
+      await axios.post(`http://localhost:5000/piket`, {
+        id_guru: id_guru,
+        tanggal: tanggal,
+        keterangan: keterangan,
       });
+      window.location.reload();
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const getPiket = async () => {
+    const response = await axios.get("http://localhost:5000/piket");
+    setPiket(response.data);
   };
 
   const handleToggleForm = () => {
@@ -62,8 +55,8 @@ const JadwalPiket = () => {
       </div>
       <div className="flex justify-between pb-5 w-full">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
           onClick={handleToggleForm}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
         >
           Atur Jadwal Piket
         </button>
@@ -72,18 +65,18 @@ const JadwalPiket = () => {
 
       {showForm && (
         <div>
-          <form onSubmit={handleCreatePiket}>
+          <form onSubmit={createPiket}>
             <select
               name="id_guru"
-              value={formData.id_guru}
-              onChange={handleChange}
+              value={id_guru}
+              onChange={(e) => setId_guru(e.target.value)}
               className="block border border-gray-300 p-2 rounded-md w-full"
             >
               <option value="" disabled hidden>
                 Pilih Guru
               </option>
               {guruList.map((guru) => (
-                <option key={guru.id} value={guru.id}>
+                <option key={guru.id_guru} value={guru.id_guru}>
                   {guru.nama}
                 </option>
               ))}
@@ -91,22 +84,22 @@ const JadwalPiket = () => {
             <input
               type="date"
               name="tanggal"
-              value={formData.tanggal}
-              onChange={handleChange}
+              value={tanggal}
+              onChange={(e) => setTanggal(e.target.value)}
               className="block border border-gray-300 p-2 rounded-md w-full"
             />
             <input
               type="text"
               name="keterangan"
-              placeholder="Keterangan"
-              value={formData.keterangan}
-              onChange={handleChange}
+              placeholder="keterangan"
+              value={keterangan}
+              onChange={(e) => setKeterangan(e.target.value)}
               className="block border border-gray-300 p-2 rounded-md w-full"
             />
             <div className="flex justify-between">
               <div></div>
               <button
-                type="submit"
+                type="Submit"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
               >
                 Tambahkan
@@ -115,8 +108,7 @@ const JadwalPiket = () => {
           </form>
         </div>
       )}
-
-      {jadwalPiket.length > 0 ? (
+      <div>
         <table className="border-collapse border w-full text-left mt-4">
           <thead>
             <tr>
@@ -135,27 +127,25 @@ const JadwalPiket = () => {
             </tr>
           </thead>
           <tbody>
-            {jadwalPiket.map((item, index) => (
-              <tr key={item.id_piket}>
+            {piket.map((item, index) => (
+              <tr key={item && item.id_piket}>
                 <td className="border border-gray-600 text-center">
                   {index + 1}
                 </td>
                 <td className="border border-gray-600 text-center">
-                  {item.tanggal}
+                  {item && item.tanggal}
                 </td>
                 <td className="border border-gray-600 text-center">
-                  {item.id_guru}
+                  {item && item.Guru && item.Guru.nama}
                 </td>
                 <td className="border border-gray-600 text-center">
-                  {item.keterangan}
+                  {item && item.keterangan}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      ) : (
-        <p>Tidak ada jadwal piket yang tersedia.</p>
-      )}
+      </div>
     </div>
   );
 };

@@ -95,7 +95,7 @@ const IsiDaftarHadir = () => {
 
   const Hadir = async () => {
     try {
-      await axios.post("http://localhost:5000/kehadiran", {
+      await axios.post("http://localhost:5000/kehadiran/", {
         id_guru: id_user,
       });
       console.log("Hadir berhasil");

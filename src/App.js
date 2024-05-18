@@ -10,6 +10,7 @@ import DataGuruStafPage from "./pages/DataGuruStafPage";
 
 import JadwalPiketPage from "./pages/JadwalPiketPage";
 import DetailPage from "./pages/DetailPage";
+import DetailKepsekPage from "./pages/DetailKepsekPage";
 
 
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/riwayatkehadiran" element={<RiwayatKehadiranPage/>} />
           <Route path="/daftarguru" element={<DataGuruStafPage/>} />
           <Route path="/detail/:id" element={<DetailPage/>}/>
+          <Route path="/detailkepsek/:id" element={<DetailKepsekPage/>}/>
           <Route path="/jadwalpiket" element={<JadwalPiketPage/>} />
         </Routes>
       </BrowserRouter>

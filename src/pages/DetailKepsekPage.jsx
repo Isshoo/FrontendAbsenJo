@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import Layout from "./Layout";
-import Detail from "../component/Detail";
+import DetailKepsek from "../component/DetailKepsek";
 import { useDispatch, useSelector } from "react-redux";
 import { getMe } from "../features/authSlice";
 import { useNavigate } from "react-router-dom";
 
-const DetailPage = () => {
+const DetailKepsekPage = () => {
   {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -23,9 +23,9 @@ const DetailPage = () => {
   }
   return (
     <Layout>
-      <Detail />
+      <DetailKepsek />
     </Layout>
   );
 };
 
-export default DetailPage;
+export default DetailKepsekPage;

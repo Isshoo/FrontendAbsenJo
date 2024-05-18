@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { IoEyeSharp } from "react-icons/io5";
 import Detail from "./Detail";
 
 const DataGuruStaf = () => {
@@ -8,7 +9,6 @@ const DataGuruStaf = () => {
   const [guru, setGuru] = useState([]);
   const [kepsek, setKepsek] = useState([]);
   const [newGuruData, setNewGuruData] = useState({
-    No_Daftar: "",
     nama: "",
     NIP: "",
     thnMasuk: "",
@@ -48,7 +48,7 @@ const DataGuruStaf = () => {
 
   const addGuru = async () => {
     const formData = new FormData();
-    formData.append("No_Daftar", newGuruData.No_Daftar);
+
     formData.append("nama", newGuruData.nama);
     formData.append("NIP", newGuruData.NIP);
     formData.append("thnMasuk", newGuruData.thnMasuk);
@@ -70,7 +70,6 @@ const DataGuruStaf = () => {
 
     // Reset the form after successful submission
     setNewGuruData({
-      No_Daftar: "",
       nama: "",
       NIP: "",
       thnMasuk: "",
@@ -93,7 +92,7 @@ const DataGuruStaf = () => {
 
   return (
     <div className="w-full">
-      <h1 className="my-4 text-xl">Daftar Guru dan Staf</h1>
+      <h1 className="my-4 text-xl">Daftar Guru</h1>
       <div className="border border-slate-950 p-3">
         <div className="flex justify-between items-center mb-2">
           <h1>Data Guru</h1>
@@ -113,17 +112,6 @@ const DataGuruStaf = () => {
               <form onSubmit={addGuru} className="">
                 <div className="flex justify-evenly">
                   <div className="mr-4 w-1/2">
-                    <div className="mb-4">
-                      <label className="block mb-2">Nomor Daftar:</label>
-                      <input
-                        type="text"
-                        name="No_Daftar"
-                        placeholder="Nomor Daftar"
-                        value={newGuruData.No_Daftar}
-                        onChange={handleInputChange}
-                        className="block border border-gray-300 p-2 rounded-md w-full"
-                      />
-                    </div>
                     <div className="mb-4">
                       <label className="block mb-2">Nama:</label>
                       <input
@@ -237,12 +225,20 @@ const DataGuruStaf = () => {
                     </div>
                   </div>
                 </div>
-                <button
-                  type="submit"
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex justify-center"
-                >
-                  Selesai
-                </button>
+                <div className="flex justify-start">
+                  <button
+                    onClick={() => setShowGuru(false)}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex justify-center mx-3"
+                  >
+                    Tutup
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex justify-center"
+                  >
+                    Selesai
+                  </button>
+                </div>
               </form>
             </div>
           </div>
@@ -302,8 +298,13 @@ const DataGuruStaf = () => {
                 <td className="border border-slate-600 text-center">
                   {item && item.noHP}
                 </td>
-                <td className="border border-slate-600 text-center">
-                  <Link to={`/detail/${item && item.id_kepsek}`}>tod</Link>
+                <td className="border border-slate-600 items-center">
+                  <Link
+                    className="flex justify-center"
+                    to={`/detailkepsek/${item && item.id_kepsek}`}
+                  >
+                    <IoEyeSharp />
+                  </Link>
                 </td>
               </tr>
             ))}
@@ -332,8 +333,13 @@ const DataGuruStaf = () => {
                 <td className="border border-slate-600 text-center">
                   {item && item.noHP}
                 </td>
-                <td className="border border-slate-600 text-center">
-                  <Link to={`/detail/${item && item.id_guru}`}>tod</Link>
+                <td className="border border-slate-600 items-center">
+                  <Link
+                    className="flex justify-center"
+                    to={`/detail/${item && item.id_guru}`}
+                  >
+                    <IoEyeSharp />
+                  </Link>
                 </td>
               </tr>
             ))}

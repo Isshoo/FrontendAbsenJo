@@ -4,16 +4,9 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 const Detail = () => {
-  const [guru, setGuru] = useState([]);
   const [kepsek, setKepsek] = useState([]);
   const { id } = useParams();
 
-  const getGurubyId = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/guru/${id}`);
-      setGuru(response.data);
-    } catch (error) {}
-  };
   const getKepsekbyId = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/kepsek/${id}`);
@@ -22,7 +15,6 @@ const Detail = () => {
   };
 
   useEffect(() => {
-    getGurubyId();
     getKepsekbyId();
   }, []);
 
@@ -42,7 +34,7 @@ const Detail = () => {
             <div className=" h-52 w-52 mx-auto mt-20 rounded-full">
               <img
                 className="size-full rounded-full"
-                src={guru.url}
+                src={kepsek.url}
                 alt="Profil"
               />
             </div>
@@ -55,25 +47,25 @@ const Detail = () => {
                 <label className="block mb-2  font-bold text-blue-500">
                   Nama:
                 </label>
-                <h1>{guru.nama}</h1>
+                <h1>{kepsek.nama}</h1>
               </div>
               <div className="mb-4">
                 <label className="block mb-2 font-bold text-blue-500">
                   NIP:
                 </label>
-                <h1>{guru.NIP}</h1>
+                <h1>{kepsek.NIP}</h1>
               </div>
               <div className="mb-4">
                 <label className="block mb-2 font-bold text-blue-500">
                   Tahun Masuk:
                 </label>
-                <h1>{guru.thnMasuk}</h1>
+                <h1>{kepsek.thnMasuk}</h1>
               </div>
               <div className="mb-4">
                 <label className="block mb-2 font-bold text-blue-500">
                   Jenis Kelamin:
                 </label>
-                <h1>{guru.jenis_kelamin}</h1>
+                <h1>{kepsek.jenis_kelamin}</h1>
               </div>
             </div>
             <div className="ml-4 w-1/2">
@@ -81,25 +73,25 @@ const Detail = () => {
                 <label className="block mb-2 font-bold text-blue-500">
                   Tempat Lahir:
                 </label>
-                <h1>{guru.ttl}</h1>
+                <h1>{kepsek.ttl}</h1>
               </div>
               <div className="mb-4">
                 <label className="block mb-2 font-bold text-blue-500">
                   Agama:
                 </label>
-                <h1>{guru.agama}</h1>
+                <h1>{kepsek.agama}</h1>
               </div>
               <div className="mb-4">
                 <label className="block mb-2 font-bold text-blue-500">
                   Alamat:
                 </label>
-                <h1>{guru.alamat}</h1>
+                <h1>{kepsek.alamat}</h1>
               </div>
               <div className="mb-4">
                 <label className="block mb-2 font-bold text-blue-500">
                   Nomor HP:
                 </label>
-                <h1>{guru.noHP}</h1>
+                <h1>{kepsek.noHP}</h1>
               </div>
             </div>
           </div>
