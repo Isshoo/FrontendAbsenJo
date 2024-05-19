@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { HiChevronDown } from "react-icons/hi2";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { parseAndFormatDateString } from "../utils/helper";
 
 const DashboardGuru = () => {
   const { user } = useSelector((state) => state.auth);
@@ -80,6 +81,20 @@ const DashboardGuru = () => {
     setCurrentDay(day);
   };
   setInterval(updateDay, 1000);
+
+  const getDayName = (dateString) => {
+    const date = new Date(dateString);
+    const dayNames = [
+      "Minggu",
+      "Senin",
+      "Selasa",
+      "Rabu",
+      "Kamis",
+      "Jumat",
+      "Sabtu",
+    ];
+    return dayNames[date.getDay()];
+  };
 
   function getNamaHari(hari) {
     const hariDalamSeminggu = [
@@ -251,7 +266,9 @@ const DashboardGuru = () => {
                               {index + 1}.
                             </td>
                             <td className="border border-slate-600 text-justify pl-3">
-                              {item && item.createdAt}
+                              {getDayName(item && item.createdAt)}
+                              {", "}
+                              {item && parseAndFormatDateString(item.createdAt)}
                             </td>
                             <td className="border border-slate-600 text-center ">
                               {item && extractTime(item.masuk)}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { HiChevronDown } from "react-icons/hi";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+import { parseAndFormatDateString } from "../utils/helper";
 
 const RiwayatKehadiran = () => {
   const { user } = useSelector((state) => state.auth);
@@ -67,6 +68,20 @@ const RiwayatKehadiran = () => {
 
   const bulan = currentMonth;
   const namaBulan = getNamaBulan(bulan);
+
+  const getDayName = (dateString) => {
+    const date = new Date(dateString);
+    const dayNames = [
+      "Minggu",
+      "Senin",
+      "Selasa",
+      "Rabu",
+      "Kamis",
+      "Jumat",
+      "Sabtu",
+    ];
+    return dayNames[date.getDay()];
+  };
 
   function extractDay(date) {
     const day = date.getDay();
@@ -164,7 +179,10 @@ const RiwayatKehadiran = () => {
                                   {index + 1}.
                                 </td>
                                 <td className="border border-slate-600 text-justify pl-3">
-                                  {item && item.createdAt}
+                                  {getDayName(item && item.createdAt)}
+                                  {", "}
+                                  {item &&
+                                    parseAndFormatDateString(item.createdAt)}
                                 </td>
                                 <td className="border border-slate-600 text-center ">
                                   {item && extractTime(item.masuk)}
