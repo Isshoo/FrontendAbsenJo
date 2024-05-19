@@ -37,6 +37,20 @@ const Pengajuan = () => {
     getValid();
   }, [id_user]);
 
+  const getDayName = (dateString) => {
+    const date = new Date(dateString);
+    const dayNames = [
+      "Minggu",
+      "Senin",
+      "Selasa",
+      "Rabu",
+      "Kamis",
+      "Jumat",
+      "Sabtu",
+    ];
+    return dayNames[date.getDay()];
+  };
+
   const loadFile = (e) => {
     const selectFile = e.target.files[0];
     setFile(selectFile);
@@ -87,7 +101,7 @@ const Pengajuan = () => {
   return (
     <div className="">
       <div className="flex items-center">
-        <h1 className="mt-4 mb-3 text-xl">Pengajuan</h1>
+        <h1 className="mt-4 mb-3 text-2xl font-bold">Pengajuan</h1>
         <div></div>
       </div>
       {user && user.role === "Guru" && (
@@ -192,25 +206,25 @@ const Pengajuan = () => {
           <table className="border border-slate-600 w-full my-2">
             <thead>
               <tr>
-                <th className="border border-slate-700 text-center bg-slate-400 py-2">
+                <th className="border border-slate-700 text-center bg-blue-400 py-2">
                   No.
                 </th>
-                <th className="border border-slate-700 text-center bg-slate-400 py-2">
+                <th className="border border-slate-700 text-center bg-blue-400 py-2">
                   Hari/Tanggal
                 </th>
-                <th className="border border-slate-700 text-center bg-slate-400 py-2">
+                <th className="border border-slate-700 text-center bg-blue-400 py-2">
                   Nama
                 </th>
-                <th className="border border-slate-700 text-center bg-slate-400 py-2">
+                <th className="border border-slate-700 text-center bg-blue-400 py-2">
                   Tipe
                 </th>
-                <th className="border border-slate-700 text-center bg-slate-400 py-2">
+                <th className="border border-slate-700 text-center bg-blue-400 py-2">
                   Keterangan
                 </th>
-                <th className="border border-slate-700 text-center bg-slate-400 py-2">
+                <th className="border border-slate-700 text-center bg-blue-400 py-2">
                   File Pengajuan
                 </th>
-                <th className="border border-slate-700 text-center bg-slate-400 py-2">
+                <th className="border border-slate-700 text-center bg-blue-400 py-2">
                   Validasi
                 </th>
               </tr>
@@ -224,6 +238,7 @@ const Pengajuan = () => {
                       {index + 1}.
                     </td>
                     <td className=" text-justify border-slate-700 border px-3 py-2">
+                      {getDayName(items && items.tanggal)} {", "}
                       {items && items.tanggal}
                     </td>
                     <td className=" text-justify border-slate-700 border px-3 py-2">

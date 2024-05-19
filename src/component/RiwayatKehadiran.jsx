@@ -24,6 +24,7 @@ const RiwayatKehadiran = () => {
       setKehadiran(response.data);
     } catch (error) {}
   };
+
   const extractTime = (masuk) => {
     const jam = masuk.slice(8, 10);
     const menit = masuk.slice(10, 12);
@@ -67,6 +68,27 @@ const RiwayatKehadiran = () => {
   const bulan = currentMonth;
   const namaBulan = getNamaBulan(bulan);
 
+  function extractDay(date) {
+    const day = date.getDay();
+    const days = [
+      "Minggu",
+      "Senin",
+      "Selasa",
+      "Rabu",
+      "Kamis",
+      "Jumat",
+      "Sabtu",
+    ];
+    return days[day];
+  }
+
+  function formatDate(date) {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
   const [selectedOption, setSelectedOption] = useState(null);
 
   const handleOptionChange = (option) => {
@@ -85,7 +107,7 @@ const RiwayatKehadiran = () => {
   return (
     <div>
       <div className="flex items-center">
-        <h1 className="my-4 text-xl">Riwayat Kehadiran</h1>
+        <h1 className="my-4 text-2xl font-bold">Riwayat Kehadiran</h1>
         <div></div>
       </div>
       <div className="border border-slate-700 p-3">
@@ -113,7 +135,7 @@ const RiwayatKehadiran = () => {
                   <table className="border-collapse border-slate-400 border w-full text-left">
                     <thead className="">
                       <tr>
-                        <th className="border border-slate-700 text-center bg-blue-400 w-16">
+                        <th className="border border-slate-700 text-center bg-blue-400 w-16 h-10">
                           No.
                         </th>
                         <th className="border border-slate-700 text-center bg-blue-400">
@@ -131,26 +153,30 @@ const RiwayatKehadiran = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {kehadiran.map((item, index) => {
-                        const createdAt = new Date(item.createdAt);
-                        if (isToday(createdAt)) {
-                          return (
-                            <tr key={item && item.Guru && item.Guru.id_guru}>
-                              <td className="border border-slate-600 text-right pr-2">
-                                {index + 1}.
-                              </td>
-                              <td className="border border-slate-600 text-justify pl-3"></td>
-                              <td className="border border-slate-600 text-center ">
-                                {item && extractTime(item.masuk)}
-                              </td>
-                              <td className="border border-slate-600 text-center ">
-                                {item && extractTime(item.keluar)}
-                              </td>
-                              <td className="border border-slate-600 text-center"></td>
-                            </tr>
-                          );
-                        }
-                      })}
+                      {kehadiran
+                        .filter((item) => item.Guru.id_guru === idUser)
+                        .map((item, index) => {
+                          const createdAt = new Date(item.createdAt);
+                          if (isToday(createdAt)) {
+                            return (
+                              <tr key={item && item.Guru && item.Guru.id_guru}>
+                                <td className="border border-slate-600 text-right pr-2 h-10">
+                                  {index + 1}.
+                                </td>
+                                <td className="border border-slate-600 text-justify pl-3">
+                                  {item && item.createdAt}
+                                </td>
+                                <td className="border border-slate-600 text-center ">
+                                  {item && extractTime(item.masuk)}
+                                </td>
+                                <td className="border border-slate-600 text-center ">
+                                  {item && extractTime(item.keluar)}
+                                </td>
+                                <td className="border border-slate-600 text-center"></td>
+                              </tr>
+                            );
+                          }
+                        })}
                     </tbody>
                   </table>
                 </div>
@@ -167,7 +193,7 @@ const RiwayatKehadiran = () => {
                 <table className="border-collapse border-slate-400 border w-full text-left ">
                   <thead className="">
                     <tr>
-                      <th className="border border-slate-700 text-center bg-blue-400 w-16">
+                      <th className="border border-slate-700 text-center bg-blue-400 w-16 h-10">
                         No.
                       </th>
                       <th className="border border-slate-700 text-center bg-blue-400 w-72">
@@ -200,7 +226,7 @@ const RiwayatKehadiran = () => {
                       if (isToday(createdAt)) {
                         return (
                           <tr key={item && item.Guru && item.Guru.id_guru}>
-                            <td className="border border-slate-600 text-right pr-2">
+                            <td className="border border-slate-600 text-right pr-2 h-10">
                               {index + 1}.
                             </td>
                             <td className="border border-slate-600 text-justify pl-3"></td>
@@ -251,7 +277,7 @@ const RiwayatKehadiran = () => {
                 <table className="border-collapse border-slate-400 border w-full text-left ">
                   <thead className="">
                     <tr>
-                      <th className="border border-slate-700 text-center bg-blue-400 w-16">
+                      <th className="border border-slate-700 text-center bg-blue-400 w-16 h-10">
                         No.
                       </th>
                       <th className="border border-slate-700 text-center bg-blue-400">
@@ -274,7 +300,7 @@ const RiwayatKehadiran = () => {
                       if (isToday(createdAt)) {
                         return (
                           <tr key={item && item.Guru && item.Guru.id_guru}>
-                            <td className="border border-slate-600 text-right pr-2">
+                            <td className="border border-slate-600 text-right pr-2 h-10">
                               {index + 1}.
                             </td>
                             <td className="border border-slate-600 text-justify pl-3">
@@ -302,7 +328,7 @@ const RiwayatKehadiran = () => {
                 <table className="border-collapse border-slate-400 border w-full text-left ">
                   <thead className="">
                     <tr>
-                      <th className="border border-slate-700 text-center bg-blue-400 w-16">
+                      <th className="border border-slate-700 text-center bg-blue-400 w-16 h-10">
                         No.
                       </th>
                       <th className="border border-slate-700 text-center bg-blue-400 w-72">
@@ -334,7 +360,7 @@ const RiwayatKehadiran = () => {
                       if (isToday(createdAt)) {
                         return (
                           <tr key={item && item.Guru && item.Guru.id_guru}>
-                            <td className="border border-slate-600 text-right pr-2">
+                            <td className="border border-slate-600 text-right pr-2 h-10">
                               {index + 1}.
                             </td>
                             <td className="border border-slate-600 text-justify pl-3"></td>
@@ -362,7 +388,7 @@ const RiwayatKehadiran = () => {
                 <table className="border-collapse border-slate-400 border w-full text-left ">
                   <thead className="">
                     <tr>
-                      <th className="border border-slate-700 text-center bg-blue-400 w-16">
+                      <th className="border border-slate-700 text-center bg-blue-400 w-16 h-10">
                         No.
                       </th>
                       <th className="border border-slate-700 text-center bg-blue-400 w-72">
@@ -394,7 +420,7 @@ const RiwayatKehadiran = () => {
                       if (isToday(createdAt)) {
                         return (
                           <tr key={item && item.Guru && item.Guru.id_guru}>
-                            <td className="border border-slate-600 text-right pr-2">
+                            <td className="border border-slate-600 text-right pr-2 h-10">
                               {index + 1}.
                             </td>
                             <td className="border border-slate-600 text-justify pl-3"></td>

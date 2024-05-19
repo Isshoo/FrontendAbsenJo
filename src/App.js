@@ -11,6 +11,7 @@ import DataGuruStafPage from "./pages/DataGuruStafPage";
 import JadwalPiketPage from "./pages/JadwalPiketPage";
 import DetailPage from "./pages/DetailPage";
 import DetailKepsekPage from "./pages/DetailKepsekPage";
+import UpdateDataDiriPage from "./pages/UpdateDataDiriPage";
 
 
 
@@ -32,6 +33,7 @@ function App() {
           <Route path="/detail/:id" element={<DetailPage/>}/>
           <Route path="/detailkepsek/:id" element={<DetailKepsekPage/>}/>
           <Route path="/jadwalpiket" element={<JadwalPiketPage/>} />
+          <Route path="/updatedatadiri/:id" element={<UpdateDataDiriPage/>} />
         </Routes>
       </BrowserRouter>
     </div>

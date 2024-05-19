@@ -6,6 +6,7 @@ import { IoHome } from "react-icons/io5";
 const IsiDaftarHadir = () => {
   const { user } = useSelector((state) => state.auth);
   const [keluarData, setKeluarData] = useState(null); // Menyimpan data keluar dari server
+  const [lastInputDate, setLastInputDate] = useState(null); // Menyimpan tanggal terakhir penginputan data masuk dan keluar
   const id_user = user && (user.id_guru || user.id_kepsek);
 
   let time = new Date().toLocaleTimeString();
@@ -94,14 +95,27 @@ const IsiDaftarHadir = () => {
   };
 
   const Hadir = async () => {
+    if (
+      lastInputDate &&
+      lastInputDate.getFullYear() === new Date().getFullYear() &&
+      lastInputDate.getMonth() === new Date().getMonth() &&
+      lastInputDate.getDate() === new Date().getDate()
+    ) {
+      alert("Anda hanya dapat menginput data masuk dan keluar sehari sekali.");
+      return;
+    }
+
     try {
       await axios.post("http://localhost:5000/kehadiran/", {
         id_guru: id_user,
+        id_kepsek: id_user,
       });
       console.log("Hadir berhasil");
       getKeluar(id_user);
+      setLastInputDate(new Date());
     } catch (error) {
       console.log("gagal hadir:", error);
+      alert("Gagal menginput data masuk.");
     }
   };
 
@@ -110,14 +124,16 @@ const IsiDaftarHadir = () => {
       await axios.patch(`http://localhost:5000/kehadiran/${id_kehadiran}`);
       getKeluar(id_user);
       window.location.reload();
+      setLastInputDate(new Date());
     } catch (error) {
       console.log("gagal keluar:", error);
+      alert("Gagal menginput data keluar.");
     }
   };
-  const getKeluar = async (id_guru) => {
+  const getKeluar = async (id_user) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/kehadiran/baru/${id_guru}`
+        `http://localhost:5000/kehadiran/baru/${id_user}`
       );
       setKeluarData(response.data);
     } catch (error) {
@@ -132,9 +148,9 @@ const IsiDaftarHadir = () => {
   return (
     <div className="">
       <div className="flex justify-between items-center">
-        <h1 className="text-xl my-4">Daftar Hadir</h1>
+        <h1 className="text-2xl font-bold my-4">Daftar Hadir</h1>
       </div>
-      <div className="border border-slate-950 p-6 mt-10">
+      <div className="border border-slate-950 p-6 mt-10  h-96 items-center pt-20">
         <h1 className="text-center text-6xl mb-2">{currentTime}</h1>
         <h1 className="text-center text-lg mb-9">
           {namaHari}, {currentDate} {namaBulan} {currentYear}

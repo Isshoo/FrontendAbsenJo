@@ -61,7 +61,7 @@ const Sidebar = () => {
                 </Link>
               )}
 
-              {user && user.role === "Admin" && (
+              {user && (user.role === "Admin" || user.role === "Kepsek") && (
                 <Link
                   to="/jadwalpiket"
                   className="hover:bg-blue-500 active:bg-blue-600 hover:text-white rounded-md p-2 pl-4 text-base block w-full my-1"

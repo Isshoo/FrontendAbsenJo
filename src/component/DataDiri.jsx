@@ -1,7 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const DataDiri = () => {
+  const { id } = useParams();
   const { user } = useSelector((state) => state.auth);
   const nama = user && user.nama;
   const NIP = user && user.NIP;
@@ -12,13 +15,18 @@ const DataDiri = () => {
   const noHP = user && user.noHP;
   const agama = user && user.agama;
   const thnMasuk = user && user.thnMasuk;
+
   return (
     <div>
       <div className="flex justify-between items-center pr-5">
         <h1 className="my-4 text-xl">Data Diri</h1>
         <div className="">
-          <button className="border px-4 py-1">Edit</button>
-          <button className="border px-4 py-1 ml-3">Simpan</button>
+          <Link
+            to={`/updatedatadiri/${id}`}
+            className="border px-4 py-1  hover:bg-blue-500 active:bg-blue-600 hover:text-white"
+          >
+            Edit
+          </Link>
         </div>
       </div>
 
@@ -27,14 +35,9 @@ const DataDiri = () => {
           <div className=" h-52 w-52 mx-auto mt-20 rounded-full">
             <img className="size-full rounded-full" src={foto} alt="Profil" />
           </div>
-          <div className="flex justify-center py-3 ">
-            <button className=" text-gray-500 py-1 px-2 underline">
-              Ganti foto
-            </button>
-          </div>
         </div>
       </div>
-      <div className="px-32 mt-44">
+      <div className="px-32 mt-32">
         <table className="w-full text-left ">
           <tr className="h-16">
             <td className="w-44">

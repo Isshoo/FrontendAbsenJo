@@ -28,7 +28,7 @@ const UbahPassword = () => {
   return (
     <div>
       <div className="items-center flex justify-between">
-        <h1 className="my-4 text-xl">Ubah Password</h1>
+        <h1 className="my-4 text-2xl font-bold">Ubah Password</h1>
         <div></div>
       </div>
       <div className="flex justify-center w-full h-full">

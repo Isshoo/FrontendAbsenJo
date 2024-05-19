@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 const JadwalPiket = () => {
+  const { user } = useSelector((state) => state.auth);
   const [tanggal, setTanggal] = useState("");
   const [id_guru, setId_guru] = useState("");
   const [keterangan, setKeterangan] = useState("");
@@ -44,6 +45,20 @@ const JadwalPiket = () => {
     setPiket(response.data);
   };
 
+  const getDayName = (dateString) => {
+    const date = new Date(dateString);
+    const dayNames = [
+      "Minggu",
+      "Senin",
+      "Selasa",
+      "Rabu",
+      "Kamis",
+      "Jumat",
+      "Sabtu",
+    ];
+    return dayNames[date.getDay()];
+  };
+
   const handleToggleForm = () => {
     setShowForm(!showForm);
   };
@@ -51,17 +66,20 @@ const JadwalPiket = () => {
   return (
     <div>
       <div className="flex items-center">
-        <h1 className="my-4 text-xl">Jadwal Piket</h1>
+        <h1 className="my-4 text-2xl font-bold">Jadwal Piket</h1>
       </div>
-      <div className="flex justify-between pb-5 w-full">
-        <button
-          onClick={handleToggleForm}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
-        >
-          Atur Jadwal Piket
-        </button>
-        <div></div>
-      </div>
+
+      {user && user.role === "Admin" && (
+        <div className="flex justify-between pb-1 w-full">
+          <button
+            onClick={handleToggleForm}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
+          >
+            Atur Jadwal Piket
+          </button>
+          <div></div>
+        </div>
+      )}
 
       {showForm && (
         <div>
@@ -70,7 +88,7 @@ const JadwalPiket = () => {
               name="id_guru"
               value={id_guru}
               onChange={(e) => setId_guru(e.target.value)}
-              className="block border border-gray-300 p-2 rounded-md w-full"
+              className="block border border-gray-300 p-2 rounded-md w-full mb-2"
             >
               <option value="" disabled hidden>
                 Pilih Guru
@@ -86,7 +104,7 @@ const JadwalPiket = () => {
               name="tanggal"
               value={tanggal}
               onChange={(e) => setTanggal(e.target.value)}
-              className="block border border-gray-300 p-2 rounded-md w-full"
+              className="block border border-gray-300 p-2 rounded-md w-full mb-2"
             />
             <input
               type="text"
@@ -108,20 +126,21 @@ const JadwalPiket = () => {
           </form>
         </div>
       )}
+
       <div>
         <table className="border-collapse border w-full text-left mt-4">
           <thead>
             <tr>
-              <th className="border border-gray-700 text-center bg-gray-400">
+              <th className="border border-gray-700 text-center bg-blue-400 h-10">
                 No.
               </th>
-              <th className="border border-gray-700 text-center bg-gray-400">
+              <th className="border border-gray-700 text-center bg-blue-400">
                 Hari dan Tanggal
               </th>
-              <th className="border border-gray-700 text-center bg-gray-400">
+              <th className="border border-gray-700 text-center bg-blue-400">
                 Guru yang Bertugas
               </th>
-              <th className="border border-gray-700 text-center bg-gray-400">
+              <th className="border border-gray-700 text-center bg-blue-400">
                 Keterangan
               </th>
             </tr>
@@ -129,10 +148,11 @@ const JadwalPiket = () => {
           <tbody>
             {piket.map((item, index) => (
               <tr key={item && item.id_piket}>
-                <td className="border border-gray-600 text-center">
+                <td className="border border-gray-600 text-center h-10">
                   {index + 1}
                 </td>
                 <td className="border border-gray-600 text-center">
+                  {getDayName(item && item.tanggal)} {", "}
                   {item && item.tanggal}
                 </td>
                 <td className="border border-gray-600 text-center">
