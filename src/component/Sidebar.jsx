@@ -40,19 +40,19 @@ const Sidebar = () => {
                   Daftar Guru
                 </Link>
               )}
-              <Link
+              {/* <Link
                 to="/ubahpassword"
                 className="hover:bg-blue-500 active:bg-blue-600 hover:text-white rounded-md p-2 pl-4 text-base block w-full my-1"
               >
                 Ubah Password
-              </Link>
+              </Link> */}
             </div>
           </div>
 
           <div className="mt-2 border-t-2 border-t-black p-2 ">
             <p className="text-xs ml-0 my-3 text-gray-400">Menu Utama</p>
             <div className="">
-              {user && (user.role === "Guru" || user.role === "Kepsek") && (
+              {user && user.role === "Guru" && (
                 <Link
                   to="/isidaftarhadir"
                   className="hover:bg-blue-500 active:bg-blue-600 hover:text-white rounded-md p-2 pl-4 text-base block w-full my-1"

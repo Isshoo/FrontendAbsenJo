@@ -7,8 +7,9 @@ import { parseAndFormatDateString } from "../utils/helper";
 
 const DashboardGuru = () => {
   const { user } = useSelector((state) => state.auth);
-  const [piket, setPiket] = useState("");
+
   const nama = user && user.nama;
+  const [piket, setPiket] = useState([]);
 
   const idUser = (user && user.id_guru) || (user && user.id_kepsek);
   const [guru, setGuru] = useState([]);
@@ -24,9 +25,13 @@ const DashboardGuru = () => {
   };
   const getKehadiran = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:5000/kehadiran/${id}`);
+      const response = await axios.get("http://localhost:5000/kehadiran");
       setKehadiran(response.data);
     } catch (error) {}
+  };
+  const getPiket = async () => {
+    const response = await axios.get("http://localhost:5000/piket");
+    setPiket(response.data);
   };
   const extractTime = (masuk) => {
     const jam = masuk.slice(8, 10);
@@ -42,13 +47,23 @@ const DashboardGuru = () => {
     );
   };
 
-  function isThisMonth(date) {
-    const now = new Date();
+  const isThisWeek = (someDate) => {
+    const week = new Date();
     return (
-      date.getMonth() === now.getMonth() &&
-      date.getFullYear() === now.getFullYear()
+      someDate.getDate() === week.getDate() &&
+      someDate.getWeek() === week.getWeek() &&
+      someDate.getMonth() === week.getMonth() &&
+      someDate.getFullYear() === week.getFullYear()
     );
-  }
+  };
+
+  const isThisMonth = (someDate) => {
+    const month = new Date();
+    return (
+      someDate.getMonth() === month.getMonth() &&
+      someDate.getFullYear() === month.getFullYear()
+    );
+  };
 
   useEffect(() => {
     getGuru();
@@ -167,6 +182,13 @@ const DashboardGuru = () => {
     setPiket(response.data);
   };
 
+  let keterangan;
+  if (kehadiran.Masuk <= 7 * 60 * 60 * 1000) {
+    keterangan = "Tepat Waktu";
+  } else {
+    keterangan = "Terlambat";
+  }
+
   return (
     <div>
       <div>
@@ -197,17 +219,17 @@ const DashboardGuru = () => {
                 <h2 className="text-lg font-bold mb-2">Notifikasi</h2>
                 <ul className="list-disc list-inside">
                   <li>
-                    Cek jika ada pengajuan yang belum di validasi <br />
+                    Tidak akan hadir hari ini? <br />
                     <Link
                       to="/pengajuan"
                       className="text-blue-400 text-sm ml-6"
                     >
-                      Lihat daftar pengajuan
+                      Buat Pengajuan
                     </Link>
                   </li>
                   <br />
                   <li>
-                    Apakah sudah mengisi daftar hadir? <br />
+                    Jangan lupa mengisi kehadiran <br />
                     <Link
                       to="/isidaftarhadir"
                       className="text-blue-400 text-sm ml-6"
@@ -216,10 +238,6 @@ const DashboardGuru = () => {
                     </Link>
                   </li>
                   <br />
-                  <li>
-                    Piket hari ini : {piket.id_guru}
-                    <br />
-                  </li>
                 </ul>
               </div>
               <div className="w-full md:w-1/2 h-96 px-4 py-2">
@@ -232,55 +250,43 @@ const DashboardGuru = () => {
               </div>
             </div>
             <div className="px-4 ">
-              <h2 className="text-lg font-bold mb-2">
-                Progres Kehadiran Bulan Ini
-              </h2>
-              <div className="">
-                <table className="border-collapse border-slate-400 border w-full text-left">
-                  <thead className="">
+              <h2 className="text-lg font-bold mb-2">Jadwal Piket</h2>
+              <div>
+                <table className="border-collapse border w-full text-left mt-4">
+                  <thead>
                     <tr>
-                      <th className="border border-slate-700 text-center bg-blue-400 w-16">
+                      <th className="border border-gray-700 text-center bg-blue-400 h-10">
                         No.
                       </th>
-                      <th className="border border-slate-700 text-center bg-blue-400">
-                        Hari Tanggal
+                      <th className="border border-gray-700 text-center bg-blue-400">
+                        Hari dan Tanggal
                       </th>
-                      <th className="border border-slate-700 text-center bg-blue-400">
-                        Masuk
+                      <th className="border border-gray-700 text-center bg-blue-400">
+                        Guru yang Bertugas
                       </th>
-                      <th className="border border-slate-700 text-center bg-blue-400">
-                        Keluar
-                      </th>
-                      <th className="border border-slate-700 text-center bg-blue-400">
+                      <th className="border border-gray-700 text-center bg-blue-400">
                         Keterangan
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {kehadiran.map((item, index) => {
-                      const createdAt = new Date(item.createdAt);
-                      if (isThisMonth(createdAt)) {
-                        return (
-                          <tr key={item && item.Guru && item.Guru.id_guru}>
-                            <td className="border border-slate-600 text-right pr-2">
-                              {index + 1}.
-                            </td>
-                            <td className="border border-slate-600 text-justify pl-3">
-                              {getDayName(item && item.createdAt)}
-                              {", "}
-                              {item && parseAndFormatDateString(item.createdAt)}
-                            </td>
-                            <td className="border border-slate-600 text-center ">
-                              {item && extractTime(item.masuk)}
-                            </td>
-                            <td className="border border-slate-600 text-center ">
-                              {item && extractTime(item.keluar)}
-                            </td>
-                            <td className="border border-slate-600 text-center"></td>
-                          </tr>
-                        );
-                      }
-                    })}
+                    {piket.map((item, index) => (
+                      <tr key={item && item.id_piket}>
+                        <td className="border border-gray-600 text-center h-10">
+                          {index + 1}
+                        </td>
+                        <td className="border border-gray-600 text-center">
+                          {getDayName(item && item.tanggal)} {", "}
+                          {item && item.tanggal}
+                        </td>
+                        <td className="border border-gray-600 text-center">
+                          {item && item.Guru && item.Guru.nama}
+                        </td>
+                        <td className="border border-gray-600 text-center">
+                          {item && item.keterangan}
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -327,11 +333,12 @@ const DashboardGuru = () => {
                     </Link>
                   </li>
                   <br />
-
-                  <li>
-                    Piket hari ini : {piket.id_guru}
-                    <br />
-                  </li>
+                  {piket.map((item, index) => (
+                    <li>
+                      Piket hari ini : {item && item.Guru && item.Guru.nama}
+                      <br />
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="w-full md:w-1/2 h-96 px-4 py-2">
@@ -353,7 +360,7 @@ const DashboardGuru = () => {
                         No.
                       </th>
                       <th className="border border-slate-700 text-center bg-blue-400">
-                        Hari Tanggal
+                        Nama Guru
                       </th>
                       <th className="border border-slate-700 text-center bg-blue-400 w-36">
                         Masuk
@@ -371,18 +378,22 @@ const DashboardGuru = () => {
                       const createdAt = new Date(item.createdAt);
                       if (isToday(createdAt)) {
                         return (
-                          <tr key={item && item.Guru && item.Guru.id_guru}>
+                          <tr key={item && item.kehadiran}>
                             <td className="border border-slate-600 text-right pr-2">
                               {index + 1}.
                             </td>
-                            <td className="border border-slate-600 text-justify pl-3"></td>
+                            <td className="border border-slate-600 text-center">
+                              {item && item.Guru && item.Guru.nama}
+                            </td>
                             <td className="border border-slate-600 text-center ">
                               {item && extractTime(item.masuk)}
                             </td>
                             <td className="border border-slate-600 text-center ">
                               {item && extractTime(item.keluar)}
                             </td>
-                            <td className="border border-slate-600 text-center"></td>
+                            <td className="border border-slate-600 text-center">
+                              {keterangan}
+                            </td>
                           </tr>
                         );
                       }
@@ -462,23 +473,30 @@ const DashboardGuru = () => {
                       <th className="border border-slate-700 text-center bg-blue-400">
                         Hari Tanggal
                       </th>
-                      (lanjutkan dengan menambahkan kolom untuk menampilkan
-                      kehadiran guru)
+                      <th className="border border-slate-700 text-center bg-blue-400">
+                        Masuk
+                      </th>
+                      <th className="border border-slate-700 text-center bg-blue-400">
+                        Keluar
+                      </th>
+                      <th className="border border-slate-700 text-center bg-blue-400">
+                        Keterangan
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {kehadiran.map((item, index) => {
                       const createdAt = new Date(item.createdAt);
-                      if (isThisMonth(createdAt)) {
+                      if (isToday(createdAt)) {
                         return (
                           <tr key={item && item.Guru && item.Guru.id_guru}>
-                            <td className="border border-slate-600 text-right pr-2">
+                            <td className="border border-slate-600 text-center">
                               {index + 1}.
                             </td>
-                            <td className="border border-slate-600 text-justify pl-3">
-                              {extractDay(createdAt)}
-                              <br />
-                              {formatDate(createdAt)}
+                            <td className="border border-slate-600 text-center">
+                              {getDayName(item && item.createdAt)}
+                              {", "}
+                              {item && parseAndFormatDateString(item.createdAt)}
                             </td>
                             <td className="border border-slate-600 text-center ">
                               {item && extractTime(item.masuk)}
@@ -486,8 +504,8 @@ const DashboardGuru = () => {
                             <td className="border border-slate-600 text-center ">
                               {item && extractTime(item.keluar)}
                             </td>
-                            <td className="border border-slate-600 text-center ">
-                              {item && item.keterangan}
+                            <td className="border border-slate-600 text-center">
+                              {keterangan}
                             </td>
                           </tr>
                         );

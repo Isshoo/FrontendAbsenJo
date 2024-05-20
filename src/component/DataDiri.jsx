@@ -20,20 +20,22 @@ const DataDiri = () => {
     <div>
       <div className="flex justify-between items-center pr-5">
         <h1 className="my-4 text-xl">Data Diri</h1>
-        <div className="">
+        {/* <div className="">
           <Link
             to={`/updatedatadiri/${id}`}
             className="border px-4 py-1  hover:bg-blue-500 active:bg-blue-600 hover:text-white"
           >
             Edit
           </Link>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex justify-center">
         <div className="border w-full h-48 items-center bg-blue-400">
           <div className=" h-52 w-52 mx-auto mt-20 rounded-full">
-            <img className="size-full rounded-full" src={foto} alt="Profil" />
+            <Link to={foto}>
+              <img className="size-full rounded-full" src={foto} alt="Profil" />
+            </Link>
           </div>
         </div>
       </div>

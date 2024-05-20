@@ -10,7 +10,11 @@ const RiwayatKehadiran = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [guru, setGuru] = useState([]);
   const [kepsek, setKepsek] = useState([]);
+  const [pengajuans, setPengajuan] = useState([]);
+  const [pengajuansGuru, setPengajuanbyGuru] = useState([]);
+  const [valids, setValid] = useState([]);
   const [kehadiran, setKehadiran] = useState([]);
+  const [kehadiranGuru, setKehadiranGuru] = useState([]);
   const getGuru = async () => {
     const response = await axios.get("http://localhost:5000/guru");
     setGuru(response.data);
@@ -21,8 +25,14 @@ const RiwayatKehadiran = () => {
   };
   const getKehadiran = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:5000/kehadiran/${id}`);
+      const response = await axios.get("http://localhost:5000/kehadiran/");
       setKehadiran(response.data);
+    } catch (error) {}
+  };
+  const getKehadiranGuru = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/kehadiran/${id}`);
+      setKehadiranGuru(response.data);
     } catch (error) {}
   };
 
@@ -37,6 +47,24 @@ const RiwayatKehadiran = () => {
       someDate.getDate() === today.getDate() &&
       someDate.getMonth() === today.getMonth() &&
       someDate.getFullYear() === today.getFullYear()
+    );
+  };
+
+  const isThisWeek = (someDate) => {
+    const week = new Date();
+    return (
+      someDate.getDate() === week.getDate() &&
+      someDate.getWeek() === week.getWeek() &&
+      someDate.getMonth() === week.getMonth() &&
+      someDate.getFullYear() === week.getFullYear()
+    );
+  };
+
+  const isThisMonth = (someDate) => {
+    const month = new Date();
+    return (
+      someDate.getMonth() === month.getMonth() &&
+      someDate.getFullYear() === month.getFullYear()
     );
   };
 
@@ -97,6 +125,15 @@ const RiwayatKehadiran = () => {
     return days[day];
   }
 
+  const getValid = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/pengajuan`);
+      setValid(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   function formatDate(date) {
     const day = date.getDate();
     const month = date.getMonth() + 1;
@@ -106,6 +143,30 @@ const RiwayatKehadiran = () => {
 
   const [selectedOption, setSelectedOption] = useState(null);
 
+  const getPengajuan = async (id) => {
+    try {
+      const response = await axios.get("http://localhost:5000/pengajuan");
+      setPengajuan(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getPengajuanbyGuru = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/pengajuan/${id}`);
+      setPengajuanbyGuru(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const countPengajuan = (pengajuansGuru, tipe) => {
+    return pengajuansGuru.filter(
+      (pengajuansGuru) => pengajuansGuru.jenis === tipe
+    ).length;
+  };
+
   const handleOptionChange = (option) => {
     setSelectedOption(option);
   };
@@ -114,9 +175,18 @@ const RiwayatKehadiran = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  let keterangan;
+  if (kehadiran.masuk <= 7 * 60 * 60 * 1000) {
+    keterangan = "Tepat Waktu";
+  } else {
+    keterangan = "Terlambat";
+  }
+
   useEffect(() => {
     getGuru();
     getKepsek();
+    getPengajuan();
+    getPengajuanbyGuru(idUser);
     getKehadiran(idUser);
   }, [idUser]);
   return (
@@ -178,7 +248,7 @@ const RiwayatKehadiran = () => {
                                 <td className="border border-slate-600 text-right pr-2 h-10">
                                   {index + 1}.
                                 </td>
-                                <td className="border border-slate-600 text-justify pl-3">
+                                <td className="border border-slate-600 text-center">
                                   {getDayName(item && item.createdAt)}
                                   {", "}
                                   {item &&
@@ -190,7 +260,9 @@ const RiwayatKehadiran = () => {
                                 <td className="border border-slate-600 text-center ">
                                   {item && extractTime(item.keluar)}
                                 </td>
-                                <td className="border border-slate-600 text-center"></td>
+                                <td className="border border-slate-600 text-center">
+                                  {keterangan}
+                                </td>
                               </tr>
                             );
                           }
@@ -203,63 +275,172 @@ const RiwayatKehadiran = () => {
 
             {selectedOption === "bulananG" && (
               <div className="mb-4">
-                <div className="border-2 border-blue-600 drop-shadow-xl w-[71px] ml-[113px]  mt-1 transition-opacity"></div>
-                <div className="flex justify-between mb-2 px-14">
-                  <h1 className="text-m"></h1>
-                  <h1 className="text-2xl flex items-center">{namaBulan} </h1>
-                </div>
-                <table className="border-collapse border-slate-400 border w-full text-left ">
-                  <thead className="">
-                    <tr>
-                      <th className="border border-slate-700 text-center bg-blue-400 w-16 h-10">
-                        No.
-                      </th>
-                      <th className="border border-slate-700 text-center bg-blue-400 w-72">
-                        Bulan
-                      </th>
+                <div className="border-2 border-blue-600 drop-shadow-xl w-[80px] ml-[110px] mb-4 mt-1 transition-opacity"></div>
 
-                      <th className="border border-slate-700 text-center bg-blue-400 w-24">
-                        Hadir
-                      </th>
-                      <th className="border border-slate-700 text-center bg-blue-400 w-24">
-                        Sakit
-                      </th>
-                      <th className="border border-slate-700 text-center bg-blue-400 w-24">
-                        Izin
-                      </th>
-                      <th className="border border-slate-700 text-center bg-blue-400 w-24">
-                        Cuti
-                      </th>
-                      <th className="border border-slate-700 text-center bg-blue-400 w-24">
-                        Alpa
-                      </th>
-                      <th className="border border-slate-700 text-center bg-blue-400 w-36">
-                        Total Kehadiran
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {kehadiran.map((item, index) => {
-                      const createdAt = new Date(item.createdAt);
-                      if (isToday(createdAt)) {
-                        return (
-                          <tr key={item && item.Guru && item.Guru.id_guru}>
-                            <td className="border border-slate-600 text-right pr-2 h-10">
+                {/* <table className="border-collapse border-slate-400 border w-full text-left ">
+                <thead className="">
+                  <tr>
+                    <th className="border border-slate-700 text-center bg-blue-400 w-16 h-10">
+                      No.
+                    </th>
+                    <th className="border border-slate-700 text-center bg-blue-400 w-72">
+                      Nama Guru
+                    </th>
+                    <th className="border border-slate-700 text-center bg-blue-400 w-24">
+                      Hadir
+                    </th>
+                    <th className="border border-slate-700 text-center bg-blue-400 w-24">
+                      Sakit
+                    </th>
+                    <th className="border border-slate-700 text-center bg-blue-400 w-24">
+                      Izin
+                    </th>
+                    <th className="border border-slate-700 text-center bg-blue-400 w-24">
+                      Cuti
+                    </th>
+                    <th className="border border-slate-700 text-center bg-blue-400 w-24">
+                      Alpa
+                    </th>
+                    <th className="border border-slate-700 text-center bg-blue-400 w-36">
+                      Total Kehadiran
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {guru.map((item, index) => {
+                    const createdAt = new Date(item.createdAt);
+                    if (isThisMonth(createdAt)) {
+                      return (
+                        <tr key={item && item.Guru && item.Guru.id_guru}>
+                          <td className="border border-slate-600 text-right pr-2 h-10">
+                            {index + 1}.
+                          </td>
+                          <td className="border border-slate-600 text-justify pl-3">
+                            {item && item.nama}
+                          </td>
+                          <td className="border border-slate-600 text-center "></td>
+                          <td className="border border-slate-600 text-center ">
+                            {countPengajuan(pengajuansGuru, "Sakit")}
+                          </td>
+                          <td className="border border-slate-600 text-center">
+                            {countPengajuan(pengajuansGuru, "Izin Khusus")}
+                          </td>
+                          <td className="border border-slate-600 text-center">
+                            {countPengajuan(pengajuansGuru, "Cuti")}
+                          </td>
+                          <td className="border border-slate-600 text-center"></td>
+                          <td className="border border-slate-600 text-center"></td>
+                          <td className="border border-slate-600 text-center"></td>
+                        </tr>
+                      );
+                    }
+                  })}
+                </tbody>
+              </table> */}
+                <div className="flex justify-evenly">
+                  <div className="mr-2">
+                    <table className="border-collapse border-slate-400 border w-full text-left ">
+                      <thead className="">
+                        <tr>
+                          <th className="border border-slate-700 text-center bg-blue-400  h-10">
+                            No.
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 py-2">
+                            Hari/Tanggal
+                          </th>
+
+                          <th className="border border-slate-700 text-center bg-blue-400 ">
+                            Masuk
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 ">
+                            Keluar
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 ">
+                            Keterangan
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {kehadiran
+                          .filter((item) => item.Guru.id_guru === idUser)
+                          .map((item, index) => {
+                            const createdAt = new Date(item.createdAt);
+                            if (isThisMonth(createdAt)) {
+                              return (
+                                <tr
+                                  key={item && item.Guru && item.Guru.id_guru}
+                                >
+                                  <td className="border border-slate-600 text-right px-3 h-10">
+                                    {index + 1}.
+                                  </td>
+                                  <td className=" text-justify border-slate-700 border px-3 py-2">
+                                    {getDayName(item && item.createdAt)}
+                                    {", "}
+                                    {item &&
+                                      parseAndFormatDateString(item.createdAt)}
+                                  </td>
+
+                                  <td className="border border-slate-600 text-center px-3 ">
+                                    {item && extractTime(item.masuk)}
+                                  </td>
+                                  <td className="border border-slate-600 text-center px-3 ">
+                                    {item && extractTime(item.keluar)}
+                                  </td>
+                                  <td className="border border-slate-600 text-center px-3">
+                                    {keterangan}
+                                  </td>
+                                </tr>
+                              );
+                            }
+                          })}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="ml-2">
+                    <table className="border border-slate-600 w-full ">
+                      <thead>
+                        <tr>
+                          <th className="border border-slate-700 text-center bg-blue-400 py-2">
+                            No.
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 py-2">
+                            Hari/Tanggal
+                          </th>
+
+                          <th className="border border-slate-700 text-center bg-blue-400 py-2">
+                            Tipe
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 py-2">
+                            Keterangan
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {pengajuansGuru.map((pengajuansGuru, index) => (
+                          <tr key={pengajuansGuru && pengajuansGuru.id_guru}>
+                            <td className=" text-right pr-2 border-slate-700 border px-3 py-2">
                               {index + 1}.
                             </td>
-                            <td className="border border-slate-600 text-justify pl-3"></td>
-                            <td className="border border-slate-600 text-center "></td>
-                            <td className="border border-slate-600 text-center "></td>
-                            <td className="border border-slate-600 text-center"></td>
-                            <td className="border border-slate-600 text-center"></td>
-                            <td className="border border-slate-600 text-center"></td>
-                            <td className="border border-slate-600 text-center"></td>
+                            <td className=" text-justify border-slate-700 border px-3 py-2">
+                              {getDayName(
+                                pengajuansGuru && pengajuansGuru.tanggal
+                              )}{" "}
+                              {", "}
+                              {pengajuansGuru && pengajuansGuru.tanggal}
+                            </td>
+
+                            <td className=" text-justify border-slate-700 border px-3 py-2">
+                              {pengajuansGuru && pengajuansGuru.jenis}
+                            </td>
+                            <td className=" text-justify border-slate-700 border px-3 py-2">
+                              {pengajuansGuru && pengajuansGuru.validasi}
+                            </td>
                           </tr>
-                        );
-                      }
-                    })}
-                  </tbody>
-                </table>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -274,12 +455,12 @@ const RiwayatKehadiran = () => {
                 <p className="">Harian</p>
               </button>
 
-              <button
+              {/* <button
                 onClick={() => handleOptionChange("mingguanAK")}
                 className="flex border border-slate-600 mr-2 py-1 px-3 rounded-2xl items-center hover:bg-blue-500 active:bg-blue-600 hover:text-white"
               >
                 <p className="">Mingguan</p>
-              </button>
+              </button> */}
 
               <button
                 onClick={() => handleOptionChange("bulananAK")}
@@ -317,7 +498,7 @@ const RiwayatKehadiran = () => {
                       const createdAt = new Date(item.createdAt);
                       if (isToday(createdAt)) {
                         return (
-                          <tr key={item && item.Guru && item.Guru.id_guru}>
+                          <tr key={item && item.kehadiran}>
                             <td className="border border-slate-600 text-right pr-2 h-10">
                               {index + 1}.
                             </td>
@@ -330,7 +511,9 @@ const RiwayatKehadiran = () => {
                             <td className="border border-slate-600 text-center ">
                               {item && extractTime(item.keluar)}
                             </td>
-                            <td className="border border-slate-600 text-center"></td>
+                            <td className="border border-slate-600 text-center">
+                              {keterangan}
+                            </td>
                           </tr>
                         );
                       }
@@ -340,7 +523,7 @@ const RiwayatKehadiran = () => {
               </div>
             )}
 
-            {selectedOption === "mingguanAK" && (
+            {/* {selectedOption === "mingguanAK" && (
               <div className=" mb-4">
                 <div className="border-2 border-blue-600 drop-shadow-xl w-[80px] ml-[91px] mb-4 mt-1 transition-opacity"></div>
                 <table className="border-collapse border-slate-400 border w-full text-left ">
@@ -395,15 +578,12 @@ const RiwayatKehadiran = () => {
                   </tbody>
                 </table>
               </div>
-            )}
+            )} */}
             {selectedOption === "bulananAK" && (
               <div className="mb-4">
-                <div className="border-2 border-blue-600 drop-shadow-xl w-[70px] ml-[194px]  mt-1 transition-opacity"></div>
-                <div className="flex justify-between px-14 mb-2">
-                  <h1 className="text-m"></h1>
-                  <h1 className="text-2xl flex items-center">{namaBulan}</h1>
-                </div>
-                <table className="border-collapse border-slate-400 border w-full text-left ">
+                <div className="border-2 border-blue-600 drop-shadow-xl w-[80px] ml-[87px] mb-4 mt-1 transition-opacity"></div>
+
+                {/* <table className="border-collapse border-slate-400 border w-full text-left ">
                   <thead className="">
                     <tr>
                       <th className="border border-slate-700 text-center bg-blue-400 w-16 h-10">
@@ -433,19 +613,27 @@ const RiwayatKehadiran = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {kehadiran.map((item, index) => {
+                    {guru.map((item, index) => {
                       const createdAt = new Date(item.createdAt);
-                      if (isToday(createdAt)) {
+                      if (isThisMonth(createdAt)) {
                         return (
                           <tr key={item && item.Guru && item.Guru.id_guru}>
                             <td className="border border-slate-600 text-right pr-2 h-10">
                               {index + 1}.
                             </td>
-                            <td className="border border-slate-600 text-justify pl-3"></td>
+                            <td className="border border-slate-600 text-justify pl-3">
+                              {item && item.nama}
+                            </td>
                             <td className="border border-slate-600 text-center "></td>
-                            <td className="border border-slate-600 text-center "></td>
-                            <td className="border border-slate-600 text-center"></td>
-                            <td className="border border-slate-600 text-center"></td>
+                            <td className="border border-slate-600 text-center ">
+                              {countPengajuan(pengajuansGuru, "Sakit")}
+                            </td>
+                            <td className="border border-slate-600 text-center">
+                              {countPengajuan(pengajuansGuru, "Izin Khusus")}
+                            </td>
+                            <td className="border border-slate-600 text-center">
+                              {countPengajuan(pengajuansGuru, "Cuti")}
+                            </td>
                             <td className="border border-slate-600 text-center"></td>
                             <td className="border border-slate-600 text-center"></td>
                             <td className="border border-slate-600 text-center"></td>
@@ -454,7 +642,115 @@ const RiwayatKehadiran = () => {
                       }
                     })}
                   </tbody>
-                </table>
+                </table> */}
+                <div className="flex justify-evenly">
+                  <div className="mr-2">
+                    <table className="border-collapse border-slate-400 border w-full text-left ">
+                      <thead className="">
+                        <tr>
+                          <th className="border border-slate-700 text-center bg-blue-400  h-10">
+                            No.
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 py-2">
+                            Hari/Tanggal
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400">
+                            Nama Guru
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 ">
+                            Masuk
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 ">
+                            Keluar
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 ">
+                            Keterangan
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {kehadiran.map((item, index) => {
+                          const createdAt = new Date(item.createdAt);
+                          if (isThisMonth(createdAt)) {
+                            return (
+                              <tr key={item && item.kehadiran}>
+                                <td className="border border-slate-600 text-right px-3 h-10">
+                                  {index + 1}.
+                                </td>
+                                <td className=" text-justify border-slate-700 border px-3 py-2">
+                                  {getDayName(item && item.createdAt)}
+                                  {", "}
+                                  {item &&
+                                    parseAndFormatDateString(item.createdAt)}
+                                </td>
+                                <td className="border border-slate-600 text-justify px-3">
+                                  {item && item.Guru && item.Guru.nama}
+                                </td>
+                                <td className="border border-slate-600 text-center px-3 ">
+                                  {item && extractTime(item.masuk)}
+                                </td>
+                                <td className="border border-slate-600 text-center px-3 ">
+                                  {item && extractTime(item.keluar)}
+                                </td>
+                                <td className="border border-slate-600 text-center px-3">
+                                  {keterangan}
+                                </td>
+                              </tr>
+                            );
+                          }
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="ml-2">
+                    <table className="border border-slate-600 w-full ">
+                      <thead>
+                        <tr>
+                          <th className="border border-slate-700 text-center bg-blue-400 py-2">
+                            No.
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 py-2">
+                            Hari/Tanggal
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 py-2">
+                            Nama
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 py-2">
+                            Tipe
+                          </th>
+                          <th className="border border-slate-700 text-center bg-blue-400 py-2">
+                            Keterangan
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {pengajuans.map((pengajuan, index) => (
+                          <tr key={pengajuan && pengajuan.id_pengajuan}>
+                            <td className=" text-right pr-2 border-slate-700 border px-3 py-2">
+                              {index + 1}.
+                            </td>
+                            <td className=" text-justify border-slate-700 border px-3 py-2">
+                              {getDayName(pengajuan && pengajuan.tanggal)}{" "}
+                              {", "}
+                              {pengajuan && pengajuan.tanggal}
+                            </td>
+                            <td className=" text-justify border-slate-700 border px-3 py-2">
+                              {pengajuan &&
+                                pengajuan.Guru &&
+                                pengajuan.Guru.nama}
+                            </td>
+                            <td className=" text-justify border-slate-700 border px-3 py-2">
+                              {pengajuan && pengajuan.jenis}
+                            </td>
+                            <td className=" text-justify border-slate-700 border px-3 py-2">
+                              {pengajuan && pengajuan.validasi}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             )}
           </div>
