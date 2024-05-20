@@ -63,17 +63,28 @@ const Detail = () => {
               </div>
               <div className="mb-4">
                 <label className="block mb-2 font-bold text-blue-500">
-                  Jenis Kelamin:
+                  Status
                 </label>
-                <h1>{kepsek.jenis_kelamin}</h1>
+                <h1>{kepsek.status}</h1>
+              </div>
+
+              <div className="mb-4">
+                <label className="block mb-2 font-bold text-blue-500">
+                  Tempat, Tanggal Lahir:
+                </label>
+                <h1>
+                  {kepsek.tmptLahir}
+                  {", "}
+                  {kepsek.tglLahir}
+                </h1>
               </div>
             </div>
             <div className="ml-4 w-1/2">
               <div className="mb-4">
                 <label className="block mb-2 font-bold text-blue-500">
-                  Tempat Lahir:
+                  Jenis Kelamin:
                 </label>
-                <h1>{kepsek.ttl}</h1>
+                <h1>{kepsek.jenis_kelamin}</h1>
               </div>
               <div className="mb-4">
                 <label className="block mb-2 font-bold text-blue-500">
@@ -92,6 +103,12 @@ const Detail = () => {
                   Nomor HP:
                 </label>
                 <h1>{kepsek.noHP}</h1>
+              </div>
+              <div className="mb-4">
+                <label className="block mb-2 font-bold text-blue-500">
+                  Sisa Cuti:
+                </label>
+                <h1>{kepsek.sisaCuti}</h1>
               </div>
             </div>
           </div>

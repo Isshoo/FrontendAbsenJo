@@ -27,14 +27,26 @@ const JadwalPiket = () => {
     getPiket();
   }, []);
 
-  const createPiket = async () => {
+  const createPiket = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append("id_guru", id_guru);
+    formData.append("tanggal", tanggal);
+    formData.append("keterangan", keterangan);
+
     try {
-      await axios.post(`http://localhost:5000/piket`, {
-        id_guru: id_guru,
-        tanggal: tanggal,
-        keterangan: keterangan,
+      await axios.post("http://localhost:5000/piket", formData, {
+        headers: {
+          "Content-type": "multipart/form-data",
+        },
       });
-      window.location.reload();
+      setId_guru("");
+      setTanggal("");
+      setKeterangan("");
+
+      getPiket();
     } catch (error) {
       console.log(error);
     }
@@ -59,14 +71,32 @@ const JadwalPiket = () => {
     return dayNames[date.getDay()];
   };
 
+  let year = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(year);
+  const updateYear = () => {
+    let year = new Date().getFullYear();
+    setCurrentYear(year);
+  };
+  setInterval(updateYear, 1000);
+
+  const isThisWeek = (someDate) => {
+    const week = new Date();
+    return (
+      someDate.getWeek() === week.getWeek() &&
+      someDate.getMonth() === week.getMonth() &&
+      someDate.getFullYear() === week.getFullYear()
+    );
+  };
+
   const handleToggleForm = () => {
     setShowForm(!showForm);
   };
 
   return (
     <div>
-      <div className="flex items-center">
+      <div className="flex items-center justify-between pr-5">
         <h1 className="my-4 text-2xl font-bold">Jadwal Piket</h1>
+        <h1 className="text-lg font-bold">{currentYear} Genap</h1>
       </div>
 
       {user && user.role === "Admin" && (
@@ -146,23 +176,28 @@ const JadwalPiket = () => {
             </tr>
           </thead>
           <tbody>
-            {piket.map((item, index) => (
-              <tr key={item && item.id_piket}>
-                <td className="border border-gray-600 text-center h-10">
-                  {index + 1}
-                </td>
-                <td className="border border-gray-600 text-center">
-                  {getDayName(item && item.tanggal)} {", "}
-                  {item && item.tanggal}
-                </td>
-                <td className="border border-gray-600 text-center">
-                  {item && item.Guru && item.Guru.nama}
-                </td>
-                <td className="border border-gray-600 text-center">
-                  {item && item.keterangan}
-                </td>
-              </tr>
-            ))}
+            {piket.map((item, index) => {
+              const createdAt = new Date(item.createdAt);
+              if (isThisWeek(createdAt)) {
+                return (
+                  <tr key={item && item.id_piket}>
+                    <td className="border border-gray-600 text-center h-10">
+                      {index + 1}
+                    </td>
+                    <td className="border border-gray-600 text-center">
+                      {getDayName(item && item.tanggal)} {", "}
+                      {item && item.tanggal}
+                    </td>
+                    <td className="border border-gray-600 text-center">
+                      {item && item.Guru && item.Guru.nama}
+                    </td>
+                    <td className="border border-gray-600 text-center">
+                      {item && item.keterangan}
+                    </td>
+                  </tr>
+                );
+              }
+            })}
           </tbody>
         </table>
       </div>

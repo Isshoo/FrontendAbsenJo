@@ -51,6 +51,14 @@ const Pengajuan = () => {
     return dayNames[date.getDay()];
   };
 
+  let year = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(year);
+  const updateYear = () => {
+    let year = new Date().getFullYear();
+    setCurrentYear(year);
+  };
+  setInterval(updateYear, 1000);
+
   const loadFile = (e) => {
     const selectFile = e.target.files[0];
     setFile(selectFile);
@@ -100,9 +108,9 @@ const Pengajuan = () => {
 
   return (
     <div className="">
-      <div className="flex items-center">
+      <div className="flex items-center justify-between pr-5">
         <h1 className="mt-4 mb-3 text-2xl font-bold">Pengajuan</h1>
-        <div></div>
+        <h1 className="text-lg font-bold">{currentYear} Genap</h1>
       </div>
       {user && user.role === "Guru" && (
         <div>
@@ -264,7 +272,7 @@ const Pengajuan = () => {
                           className="p-2 border flex justify-center w-full hover:bg-blue-500 active:bg-blue-600 hover:text-white"
                           onClick={() => Validasi(items && items.id_pengajuan)}
                         >
-                          Validasi
+                          Belum diavlidasi
                         </button>
                       )}
                       {items && items.validasi === "Sudah Divalidasi" && (

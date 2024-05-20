@@ -435,18 +435,23 @@ const DashboardGuru = () => {
                   </li>
                   <br />
                   <li>
-                    Apakah sudah mengisi daftar hadir? <br />
+                    ingin melakukan perubahan dalam data guru? <br />
                     <Link
-                      to="/isidaftarhadir"
+                      to="/datagurustaf"
                       className="text-blue-400 text-sm ml-6"
                     >
-                      Daftar Hadir
+                      Daftar Guru
                     </Link>
                   </li>
                   <br />
                   <li>
-                    Piket hari ini : {piket.id_guru}
-                    <br />
+                    Sudah membuat jadwal piket untuk minggu berikutnya? <br />
+                    <Link
+                      to="/jadwalpiket"
+                      className="text-blue-400 text-sm ml-6"
+                    >
+                      Buat jadwal piket
+                    </Link>
                   </li>
                 </ul>
               </div>

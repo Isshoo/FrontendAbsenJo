@@ -16,7 +16,10 @@ const DataGuruStaf = () => {
   const [NIP, setNIP] = useState("");
   const [thnMasuk, setThnMasuk] = useState("");
   const [jenis_kelamin, setJenis_kelamin] = useState("");
-  const [ttl, setTtl] = useState("");
+  const [tmptLahir, setTmptLahir] = useState("");
+  const [tglLahir, setTglLahir] = useState("");
+  const [status, setStatus] = useState("");
+  const [sisaCuti, setSisaCuti] = useState("");
   const [agama, setAgama] = useState("");
   const [alamat, setAlamat] = useState("");
   const [noHP, setNoHP] = useState("");
@@ -46,7 +49,10 @@ const DataGuruStaf = () => {
     formData.append("NIP", NIP);
     formData.append("thnMasuk", thnMasuk);
     formData.append("jenis_kelamin", jenis_kelamin);
-    formData.append("ttl", ttl);
+    formData.append("tmptLahir", tmptLahir);
+    formData.append("tglLahir", tglLahir);
+    formData.append("status", status);
+    formData.append("sisaCuti", sisaCuti);
     formData.append("agama", agama);
     formData.append("alamat", alamat);
     formData.append("noHP", noHP);
@@ -63,7 +69,10 @@ const DataGuruStaf = () => {
       setNIP("");
       setThnMasuk("");
       setJenis_kelamin("");
-      setTtl("");
+      setTmptLahir("");
+      setTglLahir("");
+      setStatus("");
+      setSisaCuti("");
       setAgama("");
       setAlamat("");
       setNoHP("");
@@ -77,6 +86,14 @@ const DataGuruStaf = () => {
   const openGuru = () => setShowGuru(true);
   const closeGuru = () => setShowGuru(false);
 
+  let year = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(year);
+  const updateYear = () => {
+    let year = new Date().getFullYear();
+    setCurrentYear(year);
+  };
+  setInterval(updateYear, 1000);
+
   useEffect(() => {
     getGuru();
     getKepsek();
@@ -84,9 +101,9 @@ const DataGuruStaf = () => {
 
   return (
     <div className="w-full">
-      <div className=" flex justify-between items-center">
+      <div className=" flex justify-between items-center pr-5">
         <h1 className="my-4 text-2xl font-bold">Daftar Guru</h1>
-        <div></div>
+        <h1 className="text-lg font-bold">{currentYear} Genap</h1>
       </div>
       <div className="border border-slate-950 p-3">
         <div className="flex justify-between items-center mb-2">
@@ -151,37 +168,86 @@ const DataGuruStaf = () => {
                     </div>
                     <div className="mb-4 ">
                       <label className="flex mb-2">
-                        Jenis Kelamin: <p className="text-red-500 ml-2">*</p>
+                        Status: <p className="text-red-500 ml-2">*</p>
                       </label>
                       <select
-                        name="jenis_kelamin"
-                        value={jenis_kelamin}
-                        onChange={(e) => setJenis_kelamin(e.target.value)}
+                        name="status"
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
                         className="block border border-gray-300 p-2 rounded-md w-full"
                       >
                         <option value="" disabled hidden>
-                          Pilih Jenis Kelamin
+                          Pilih Status
                         </option>
-                        <option value="Laki-laki">Laki-laki</option>
-                        <option value="Perempuan">Perempuan</option>
+                        <option value="Aktif">Aktif</option>
+                        <option value="Cuti">Cuti</option>
+                        <option value="Tidak Aktif">Tidak Aktif</option>
+                        <option value="Meninggal">Meninggal</option>
                       </select>
+                    </div>
+                    <div className="mb-4 ">
+                      <label className="flex mb-2">
+                        Sisa Cuti: <p className="text-red-500 ml-2">*</p>
+                      </label>
+                      <select
+                        name="sisaCuti"
+                        value={sisaCuti}
+                        onChange={(e) => setSisaCuti(e.target.value)}
+                        className="block border border-gray-300 p-2 rounded-md w-full"
+                      >
+                        <option value="" disabled hidden>
+                          Pilih Status
+                        </option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                      </select>
+                    </div>
+                    <div className="mb-4">
+                      <label className="flex mb-2">
+                        Alamat: <p className="text-red-500 ml-2">*</p>
+                      </label>
+                      <input
+                        type="text"
+                        name="alamat"
+                        placeholder="Alamat"
+                        value={alamat}
+                        onChange={(e) => setAlamat(e.target.value)}
+                        className="block border border-gray-300 p-2 rounded-md w-full"
+                      />
                     </div>
                   </div>
                   <div className="ml-4 w-1/2">
                     <div className="mb-4 ">
                       <label className="flex mb-2">
-                        Tempat Tanggal Lahir:{" "}
+                        Tempat Lahir:
                         <p className="text-red-500 ml-2">*</p>
                       </label>
                       <input
                         type="text"
-                        name="ttl"
+                        name="tmptLahir"
                         placeholder="Tempat Lahir"
-                        value={ttl}
-                        onChange={(e) => setTtl(e.target.value)}
+                        value={tmptLahir}
+                        onChange={(e) => setTmptLahir(e.target.value)}
                         className="block border border-gray-300 p-2 rounded-md w-full"
                       />
                     </div>
+                    <div className="mb-4 ">
+                      <label className="flex mb-2">
+                        Tanggal Lahir:
+                        <p className="text-red-500 ml-2">*</p>
+                      </label>
+                      <input
+                        type="date"
+                        name="tglLahir"
+                        placeholder="Tanggal Lahir"
+                        value={tglLahir}
+                        onChange={(e) => setTglLahir(e.target.value)}
+                        className="block border border-gray-300 p-1 rounded-md w-full"
+                      />
+                    </div>
+
                     <div className="mb-4 ">
                       <label className="flex mb-2">
                         Agama: <p className="text-red-500 ml-2">*</p>
@@ -203,18 +269,23 @@ const DataGuruStaf = () => {
                         <option value="Konghucu">Konghucu</option>
                       </select>
                     </div>
-                    <div className="mb-4">
+
+                    <div className="mb-4 ">
                       <label className="flex mb-2">
-                        Alamat: <p className="text-red-500 ml-2">*</p>
+                        Jenis Kelamin: <p className="text-red-500 ml-2">*</p>
                       </label>
-                      <input
-                        type="text"
-                        name="alamat"
-                        placeholder="Alamat"
-                        value={alamat}
-                        onChange={(e) => setAlamat(e.target.value)}
+                      <select
+                        name="jenis_kelamin"
+                        value={jenis_kelamin}
+                        onChange={(e) => setJenis_kelamin(e.target.value)}
                         className="block border border-gray-300 p-2 rounded-md w-full"
-                      />
+                      >
+                        <option value="" disabled hidden>
+                          Pilih Jenis Kelamin
+                        </option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                      </select>
                     </div>
                     <div className="mb-4">
                       <label className="flex mb-2">
@@ -243,7 +314,7 @@ const DataGuruStaf = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-start">
+                <div className="flex justify-end">
                   <button
                     onClick={closeGuru}
                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex justify-center mx-3"
@@ -275,6 +346,9 @@ const DataGuruStaf = () => {
               </th>
               <th className="border border-slate-700 text-center bg-blue-400 w-20">
                 Jabatan
+              </th>
+              <th className="border border-slate-700 text-center bg-blue-400 w-20">
+                Status
               </th>
               <th className="border border-slate-700 text-center bg-blue-400 w-20">
                 Tahun Masuk
@@ -310,6 +384,9 @@ const DataGuruStaf = () => {
                 </td>
                 <td className="border border-slate-600 text-center">
                   {item && item.role}
+                </td>
+                <td className="border border-slate-600 text-center">
+                  {item && item.status}
                 </td>
                 <td className="border border-slate-600 text-center">
                   {item && item.thnMasuk}
@@ -350,6 +427,9 @@ const DataGuruStaf = () => {
                 </td>
                 <td className="border border-slate-600 text-center">
                   {item && item.role}
+                </td>
+                <td className="border border-slate-600 text-center">
+                  {item && item.status}
                 </td>
                 <td className="border border-slate-600 text-center">
                   {item && item.thnMasuk}

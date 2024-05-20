@@ -25,11 +25,19 @@ const UbahPassword = () => {
     console.log("Confirm Password:", confirmPassword);
   };
 
+  let year = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(year);
+  const updateYear = () => {
+    let year = new Date().getFullYear();
+    setCurrentYear(year);
+  };
+  setInterval(updateYear, 1000);
+
   return (
     <div>
-      <div className="items-center flex justify-between">
+      <div className="items-center flex justify-between pr-5">
         <h1 className="my-4 text-2xl font-bold">Ubah Password</h1>
-        <div></div>
+        <h1 className="text-lg font-bold">{currentYear} Genap</h1>
       </div>
       <div className="flex justify-center w-full h-full">
         <div className="border w-[450px] h-[450px] p-5 pt-20 px-10 rounded-2xl items-center border-black bg-blue-400">

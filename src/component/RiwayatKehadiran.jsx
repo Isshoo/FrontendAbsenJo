@@ -53,7 +53,6 @@ const RiwayatKehadiran = () => {
   const isThisWeek = (someDate) => {
     const week = new Date();
     return (
-      someDate.getDate() === week.getDate() &&
       someDate.getWeek() === week.getWeek() &&
       someDate.getMonth() === week.getMonth() &&
       someDate.getFullYear() === week.getFullYear()
@@ -125,6 +124,14 @@ const RiwayatKehadiran = () => {
     return days[day];
   }
 
+  let year = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(year);
+  const updateYear = () => {
+    let year = new Date().getFullYear();
+    setCurrentYear(year);
+  };
+  setInterval(updateYear, 1000);
+
   const getValid = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/pengajuan`);
@@ -191,9 +198,9 @@ const RiwayatKehadiran = () => {
   }, [idUser]);
   return (
     <div>
-      <div className="flex items-center">
+      <div className="flex items-center justify-between pr-5">
         <h1 className="my-4 text-2xl font-bold">Riwayat Kehadiran</h1>
-        <div></div>
+        <h1 className="text-lg font-bold">{currentYear} Genap</h1>
       </div>
       <div className="border border-slate-700 p-3">
         {user && user.role === "Guru" && (
@@ -424,7 +431,7 @@ const RiwayatKehadiran = () => {
                             <td className=" text-justify border-slate-700 border px-3 py-2">
                               {getDayName(
                                 pengajuansGuru && pengajuansGuru.tanggal
-                              )}{" "}
+                              )}
                               {", "}
                               {pengajuansGuru && pengajuansGuru.tanggal}
                             </td>
@@ -730,7 +737,7 @@ const RiwayatKehadiran = () => {
                               {index + 1}.
                             </td>
                             <td className=" text-justify border-slate-700 border px-3 py-2">
-                              {getDayName(pengajuan && pengajuan.tanggal)}{" "}
+                              {getDayName(pengajuan && pengajuan.tanggal)}
                               {", "}
                               {pengajuan && pengajuan.tanggal}
                             </td>

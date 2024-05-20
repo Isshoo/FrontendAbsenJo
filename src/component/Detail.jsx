@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Detail = () => {
   const [guru, setGuru] = useState([]);
-  const [kepsek, setKepsek] = useState([]);
+
   const { id } = useParams();
 
   const getGurubyId = async () => {
@@ -14,16 +14,9 @@ const Detail = () => {
       setGuru(response.data);
     } catch (error) {}
   };
-  const getKepsekbyId = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/kepsek/${id}`);
-      setKepsek(response.data);
-    } catch (error) {}
-  };
 
   useEffect(() => {
     getGurubyId();
-    getKepsekbyId();
   }, []);
 
   return (
@@ -71,17 +64,28 @@ const Detail = () => {
               </div>
               <div className="mb-4">
                 <label className="block mb-2 font-bold text-blue-500">
-                  Jenis Kelamin:
+                  Status
                 </label>
-                <h1>{guru.jenis_kelamin}</h1>
+                <h1>{guru.status}</h1>
+              </div>
+
+              <div className="mb-4">
+                <label className="block mb-2 font-bold text-blue-500">
+                  Tempat, Tanggal Lahir:
+                </label>
+                <h1>
+                  {guru.tmptLahir}
+                  {", "}
+                  {guru.tglLahir}
+                </h1>
               </div>
             </div>
             <div className="ml-4 w-1/2">
               <div className="mb-4">
                 <label className="block mb-2 font-bold text-blue-500">
-                  Tempat Lahir:
+                  Jenis Kelamin:
                 </label>
-                <h1>{guru.ttl}</h1>
+                <h1>{guru.jenis_kelamin}</h1>
               </div>
               <div className="mb-4">
                 <label className="block mb-2 font-bold text-blue-500">
@@ -100,6 +104,12 @@ const Detail = () => {
                   Nomor HP:
                 </label>
                 <h1>{guru.noHP}</h1>
+              </div>
+              <div className="mb-4">
+                <label className="block mb-2 font-bold text-blue-500">
+                  Sisa Cuti:
+                </label>
+                <h1>{guru.sisaCuti}</h1>
               </div>
             </div>
           </div>

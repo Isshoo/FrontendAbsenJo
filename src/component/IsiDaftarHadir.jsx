@@ -147,8 +147,9 @@ const IsiDaftarHadir = () => {
 
   return (
     <div className="">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center pr-5">
         <h1 className="text-2xl font-bold my-4">Daftar Hadir</h1>
+        <h1 className="text-lg font-bold">{currentYear} Genap</h1>
       </div>
       <div className="border border-slate-950 p-6 mt-10  h-96 items-center pt-20">
         <h1 className="text-center text-6xl mb-2">{currentTime}</h1>
