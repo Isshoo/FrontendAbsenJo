@@ -465,9 +465,7 @@ const DashboardGuru = () => {
               </div>
             </div>
             <div className="px-4 ">
-              <h2 className="text-lg font-bold mb-2">
-                Progres Kehadiran Bulan Ini
-              </h2>
+              <h2 className="text-lg font-bold mb-2">Kehadiran Hari Ini</h2>
               <div className="">
                 <table className="border-collapse border-slate-400 border w-full text-left">
                   <thead className="">

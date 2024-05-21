@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { parseAndFormatDateString } from "../utils/helper";
 
 const JadwalPiket = () => {
   const { user } = useSelector((state) => state.auth);
@@ -12,6 +13,7 @@ const JadwalPiket = () => {
 
   const [showForm, setShowForm] = useState(false);
   const [guruList, setGuruList] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchGuruList = async () => {
@@ -79,17 +81,28 @@ const JadwalPiket = () => {
   };
   setInterval(updateYear, 1000);
 
-  const isThisWeek = (someDate) => {
-    const week = new Date();
+  const isThisMonth = (someDate) => {
+    const month = new Date();
     return (
-      someDate.getWeek() === week.getWeek() &&
-      someDate.getMonth() === week.getMonth() &&
-      someDate.getFullYear() === week.getFullYear()
+      someDate.getMonth() === month.getMonth() &&
+      someDate.getFullYear() === month.getFullYear()
     );
   };
 
   const handleToggleForm = () => {
     setShowForm(!showForm);
+  };
+
+  const filteredPiket = piket.filter((item) => {
+    return (
+      item.tanggal.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.Guru.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.keterangan.includes(searchQuery)
+    );
+  });
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
@@ -100,7 +113,7 @@ const JadwalPiket = () => {
       </div>
 
       {user && user.role === "Admin" && (
-        <div className="flex justify-between pb-1 w-full">
+        <div className="flex justify-between pb-1 w-full mb-3">
           <button
             onClick={handleToggleForm}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
@@ -156,9 +169,17 @@ const JadwalPiket = () => {
           </form>
         </div>
       )}
-
+      <div className="flex mt-4">
+        <input
+          type="text"
+          placeholder="Cari guru..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="block border border-gray-300 px-2 py-1 rounded-md w-full"
+        />
+      </div>
       <div>
-        <table className="border-collapse border w-full text-left mt-4">
+        <table className="border-collapse border w-full text-left mt-2">
           <thead>
             <tr>
               <th className="border border-gray-700 text-center bg-blue-400 h-10">
@@ -176,9 +197,9 @@ const JadwalPiket = () => {
             </tr>
           </thead>
           <tbody>
-            {piket.map((item, index) => {
+            {filteredPiket.map((item, index) => {
               const createdAt = new Date(item.createdAt);
-              if (isThisWeek(createdAt)) {
+              if (isThisMonth(createdAt)) {
                 return (
                   <tr key={item && item.id_piket}>
                     <td className="border border-gray-600 text-center h-10">
@@ -186,7 +207,7 @@ const JadwalPiket = () => {
                     </td>
                     <td className="border border-gray-600 text-center">
                       {getDayName(item && item.tanggal)} {", "}
-                      {item && item.tanggal}
+                      {item && parseAndFormatDateString(item.tanggal)}
                     </td>
                     <td className="border border-gray-600 text-center">
                       {item && item.Guru && item.Guru.nama}

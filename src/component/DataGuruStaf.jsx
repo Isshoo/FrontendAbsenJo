@@ -11,6 +11,7 @@ const DataGuruStaf = () => {
   const [showGuru, setShowGuru] = useState(false);
   const [guru, setGuru] = useState([]);
   const [kepsek, setKepsek] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [nama, setNama] = useState("");
   const [NIP, setNIP] = useState("");
@@ -94,6 +95,25 @@ const DataGuruStaf = () => {
   };
   setInterval(updateYear, 1000);
 
+  const filteredGuru = guru.filter((item) => {
+    return (
+      item.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.thnMasuk.includes(searchQuery)
+    );
+  });
+  const filteredKepsek = kepsek.filter((item) => {
+    return (
+      item.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.thnMasuk.includes(searchQuery)
+    );
+  });
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
   useEffect(() => {
     getGuru();
     getKepsek();
@@ -107,7 +127,15 @@ const DataGuruStaf = () => {
       </div>
       <div className="border border-slate-950 p-3">
         <div className="flex justify-between items-center mb-2">
-          <h1>Data Guru</h1>
+          <div className="flex">
+            <input
+              type="text"
+              placeholder="Cari guru..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="block border border-gray-300 px-2 py-1 rounded-md w-full"
+            />
+          </div>
 
           {user && user.role === "Admin" && (
             <div className="flex">
@@ -146,6 +174,7 @@ const DataGuruStaf = () => {
                       </label>
                       <input
                         type="text"
+                        maxLength={8}
                         name="NIP"
                         placeholder="NIP"
                         value={NIP}
@@ -196,7 +225,7 @@ const DataGuruStaf = () => {
                         className="block border border-gray-300 p-2 rounded-md w-full"
                       >
                         <option value="" disabled hidden>
-                          Pilih Status
+                          Jumlah sisa cuti
                         </option>
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -366,7 +395,7 @@ const DataGuruStaf = () => {
             </tr>
           </thead>
           <tbody>
-            {kepsek.map((item, index) => (
+            {filteredKepsek.map((item, index) => (
               <tr key={item && item.id_kepsek}>
                 <td className="border border-slate-600 text-right pr-2 h-10">
                   {index + 1}.
@@ -409,7 +438,7 @@ const DataGuruStaf = () => {
               </tr>
             ))}
 
-            {guru.map((item, index) => (
+            {filteredGuru.map((item, index) => (
               <tr key={item && item.id_guru}>
                 <td className="border border-slate-600 text-right pr-2 h-10">
                   {index + 2}.

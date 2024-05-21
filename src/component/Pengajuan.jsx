@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
+import { parseAndFormatDateString } from "../utils/helper";
 
 const Pengajuan = () => {
   const { user } = useSelector((state) => state.auth);
@@ -12,6 +13,7 @@ const Pengajuan = () => {
   const [jenis, setJenis] = useState("");
   const [tanggal, setTanggal] = useState("");
   const [file, setFile] = useState("");
+  const [searchQuery4, setSearchQuery4] = useState("");
   const id_user = user && user.id_guru;
 
   const [pengajuans, setPengajuan] = useState([]);
@@ -59,6 +61,23 @@ const Pengajuan = () => {
   };
   setInterval(updateYear, 1000);
 
+  const isThisMonth = (someDate) => {
+    const month = new Date();
+    return (
+      someDate.getMonth() === month.getMonth() &&
+      someDate.getFullYear() === month.getFullYear()
+    );
+  };
+
+  const isToday = (someDate) => {
+    const today = new Date();
+    return (
+      someDate.getDate() === today.getDate() &&
+      someDate.getMonth() === today.getMonth() &&
+      someDate.getFullYear() === today.getFullYear()
+    );
+  };
+
   const loadFile = (e) => {
     const selectFile = e.target.files[0];
     setFile(selectFile);
@@ -89,6 +108,19 @@ const Pengajuan = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const filteredValids = valids.filter((item) => {
+    return (
+      item.Guru.nama.toLowerCase().includes(searchQuery4.toLowerCase()) ||
+      item.tanggal.toLowerCase().includes(searchQuery4.toLowerCase()) ||
+      item.jenis.toLowerCase().includes(searchQuery4.toLowerCase()) ||
+      item.validasi.toLowerCase().includes(searchQuery4.toLowerCase())
+    );
+  });
+
+  const handleSearchChange4 = (e) => {
+    setSearchQuery4(e.target.value);
   };
 
   const openModal = () => setShowModal(true);
@@ -142,7 +174,7 @@ const Pengajuan = () => {
                         Pilih Pengajuan
                       </option>
                       <option value="Sakit">Sakit</option>
-                      <option value="Izin Kusus">Izin Khusus</option>
+                      <option value="Izin Khusus">Izin Khusus</option>
                       <option value="Cuti">Cuti</option>
                     </select>
                   </div>
@@ -191,26 +223,41 @@ const Pengajuan = () => {
               </div>
             </div>
           )}
-          {pengajuans.map((pengajuan) => (
-            <div
-              key={pengajuan && pengajuan.id_pengajuan}
-              className="border mb-3 p-3"
-            >
-              <div className="flex justify-between items-center">
-                <h1>{pengajuan && pengajuan.jenis}</h1>
-                <h1 className="">{pengajuan && pengajuan.validasi}</h1>
-              </div>
-              <h1>{pengajuan && pengajuan.keterangan}</h1>
-              <div className="flex justify-between items-center">
-                <h1>{pengajuan && pengajuan.tanggal}</h1>
-                <Link to={pengajuan && pengajuan.url}>Lihat</Link>
-              </div>
-            </div>
-          ))}
+          {pengajuans.map((pengajuan) => {
+            const createdAt = new Date(pengajuan.createdAt);
+            if (isToday(createdAt)) {
+              return (
+                <div
+                  key={pengajuan && pengajuan.id_pengajuan}
+                  className="border mb-3 p-3"
+                >
+                  <div className="flex justify-between items-center">
+                    <h1>{pengajuan && pengajuan.jenis}</h1>
+                    <h1 className="">{pengajuan && pengajuan.validasi}</h1>
+                  </div>
+                  <h1>{pengajuan && pengajuan.keterangan}</h1>
+                  <div className="flex justify-between items-center">
+                    <h1>
+                      {getDayName(pengajuan && pengajuan.tanggal)} {", "}
+                      {pengajuan && parseAndFormatDateString(pengajuan.tanggal)}
+                    </h1>
+                    <Link to={pengajuan && pengajuan.url}>Lihat</Link>
+                  </div>
+                </div>
+              );
+            }
+          })}
         </div>
       )}
       {user && user.role !== "Guru" && (
         <div className="">
+          <input
+            type="text"
+            placeholder="Cari pengajuan"
+            value={searchQuery4}
+            onChange={handleSearchChange4}
+            className="block border border-gray-300 px-2 py-1 mb-2 rounded-md w-full ml-1"
+          />
           <table className="border border-slate-600 w-full my-2">
             <thead>
               <tr>
@@ -238,7 +285,7 @@ const Pengajuan = () => {
               </tr>
             </thead>
             <tbody>
-              {valids
+              {filteredValids
                 .sort((a, b) => a.validasi.localeCompare(b.validasi))
                 .map((items, index) => (
                   <tr key={items && items.id_pengajuan}>
@@ -247,7 +294,7 @@ const Pengajuan = () => {
                     </td>
                     <td className=" text-justify border-slate-700 border px-3 py-2">
                       {getDayName(items && items.tanggal)} {", "}
-                      {items && items.tanggal}
+                      {items && parseAndFormatDateString(items.tanggal)}
                     </td>
                     <td className=" text-justify border-slate-700 border px-3 py-2">
                       {items && items.Guru && items.Guru.nama}
@@ -272,12 +319,12 @@ const Pengajuan = () => {
                           className="p-2 border flex justify-center w-full hover:bg-blue-500 active:bg-blue-600 hover:text-white"
                           onClick={() => Validasi(items && items.id_pengajuan)}
                         >
-                          Belum diavlidasi
+                          Belum divalidasi
                         </button>
                       )}
                       {items && items.validasi === "Sudah Divalidasi" && (
                         <h1 className="p-2 border w-full text-center bg-green-500 text-white">
-                          Telah Divalidasi
+                          Sudah Divalidasi
                         </h1>
                       )}
                     </td>

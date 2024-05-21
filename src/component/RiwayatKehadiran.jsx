@@ -15,6 +15,12 @@ const RiwayatKehadiran = () => {
   const [valids, setValid] = useState([]);
   const [kehadiran, setKehadiran] = useState([]);
   const [kehadiranGuru, setKehadiranGuru] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery2, setSearchQuery2] = useState("");
+  const [searchQuery3, setSearchQuery3] = useState("");
+  const [searchQuery4, setSearchQuery4] = useState("");
+  const [searchQuery5, setSearchQuery5] = useState("");
+
   const getGuru = async () => {
     const response = await axios.get("http://localhost:5000/guru");
     setGuru(response.data);
@@ -189,6 +195,54 @@ const RiwayatKehadiran = () => {
     keterangan = "Terlambat";
   }
 
+  const filteredKehadiran = kehadiran.filter((item) => {
+    return item.masuk.toLowerCase().includes(searchQuery.toLowerCase());
+  });
+  const filteredPengajuansGuru = pengajuansGuru.filter((item) => {
+    return (
+      item.tanggal.toLowerCase().includes(searchQuery2.toLowerCase()) ||
+      item.jenis.toLowerCase().includes(searchQuery2.toLowerCase()) ||
+      item.validasi.toLowerCase().includes(searchQuery2.toLowerCase())
+    );
+  });
+
+  const filteredKehadiran2 = kehadiran.filter((item) => {
+    return (
+      item.Guru.nama.toLowerCase().includes(searchQuery3.toLowerCase()) ||
+      item.masuk.toLowerCase().includes(searchQuery3.toLowerCase())
+    );
+  });
+  const filteredKehadiran3 = kehadiran.filter((item) => {
+    return item.Guru.nama.toLowerCase().includes(searchQuery5.toLowerCase());
+  });
+  const filteredPengajuans = pengajuans.filter((item) => {
+    return (
+      item.Guru.nama.toLowerCase().includes(searchQuery4.toLowerCase()) ||
+      item.tanggal.toLowerCase().includes(searchQuery4.toLowerCase()) ||
+      item.jenis.toLowerCase().includes(searchQuery4.toLowerCase()) ||
+      item.validasi.toLowerCase().includes(searchQuery4.toLowerCase())
+    );
+  });
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchChange2 = (e) => {
+    setSearchQuery2(e.target.value);
+  };
+
+  const handleSearchChange3 = (e) => {
+    setSearchQuery3(e.target.value);
+  };
+
+  const handleSearchChange4 = (e) => {
+    setSearchQuery4(e.target.value);
+  };
+  const handleSearchChange5 = (e) => {
+    setSearchQuery5(e.target.value);
+  };
+
   useEffect(() => {
     getGuru();
     getKepsek();
@@ -283,6 +337,22 @@ const RiwayatKehadiran = () => {
             {selectedOption === "bulananG" && (
               <div className="mb-4">
                 <div className="border-2 border-blue-600 drop-shadow-xl w-[80px] ml-[110px] mb-4 mt-1 transition-opacity"></div>
+                <div className="flex justify-normal">
+                  <input
+                    type="text"
+                    placeholder="Cari kehadiran "
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className="block border border-gray-300 px-2 py-1 mb-2 rounded-md w-1/2 mr-1"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Cari pengajuan"
+                    value={searchQuery2}
+                    onChange={handleSearchChange2}
+                    className="block border border-gray-300 px-2 py-1 mb-2 rounded-md w-1/2 ml-3"
+                  />
+                </div>
 
                 {/* <table className="border-collapse border-slate-400 border w-full text-left ">
                 <thead className="">
@@ -344,8 +414,8 @@ const RiwayatKehadiran = () => {
                   })}
                 </tbody>
               </table> */}
-                <div className="flex justify-evenly">
-                  <div className="mr-2">
+                <div className="flex justify-between">
+                  <div className="mr-2 w-full">
                     <table className="border-collapse border-slate-400 border w-full text-left ">
                       <thead className="">
                         <tr>
@@ -368,7 +438,7 @@ const RiwayatKehadiran = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {kehadiran
+                        {filteredKehadiran
                           .filter((item) => item.Guru.id_guru === idUser)
                           .map((item, index) => {
                             const createdAt = new Date(item.createdAt);
@@ -403,7 +473,7 @@ const RiwayatKehadiran = () => {
                       </tbody>
                     </table>
                   </div>
-                  <div className="ml-2">
+                  <div className="ml-2 w-full">
                     <table className="border border-slate-600 w-full ">
                       <thead>
                         <tr>
@@ -423,7 +493,7 @@ const RiwayatKehadiran = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {pengajuansGuru.map((pengajuansGuru, index) => (
+                        {filteredPengajuansGuru.map((pengajuansGuru, index) => (
                           <tr key={pengajuansGuru && pengajuansGuru.id_guru}>
                             <td className=" text-right pr-2 border-slate-700 border px-3 py-2">
                               {index + 1}.
@@ -433,7 +503,10 @@ const RiwayatKehadiran = () => {
                                 pengajuansGuru && pengajuansGuru.tanggal
                               )}
                               {", "}
-                              {pengajuansGuru && pengajuansGuru.tanggal}
+                              {pengajuansGuru &&
+                                parseAndFormatDateString(
+                                  pengajuansGuru.tanggal
+                                )}
                             </td>
 
                             <td className=" text-justify border-slate-700 border px-3 py-2">
@@ -480,6 +553,15 @@ const RiwayatKehadiran = () => {
             {selectedOption === "harianAK" && (
               <div className=" mb-4">
                 <div className="border-2 border-blue-600 drop-shadow-xl w-[60px] ml-[7px] mb-4 mt-1 transition-opacity"></div>
+                <div className="flex justify-between">
+                  <input
+                    type="text"
+                    placeholder="Cari Kehadiran hari ini"
+                    value={searchQuery5}
+                    onChange={handleSearchChange5}
+                    className="block border border-gray-300 px-2 py-1 mb-2 rounded-md w-1/2 "
+                  />
+                </div>
                 <table className="border-collapse border-slate-400 border w-full text-left ">
                   <thead className="">
                     <tr>
@@ -501,7 +583,7 @@ const RiwayatKehadiran = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {kehadiran.map((item, index) => {
+                    {filteredKehadiran3.map((item, index) => {
                       const createdAt = new Date(item.createdAt);
                       if (isToday(createdAt)) {
                         return (
@@ -589,6 +671,22 @@ const RiwayatKehadiran = () => {
             {selectedOption === "bulananAK" && (
               <div className="mb-4">
                 <div className="border-2 border-blue-600 drop-shadow-xl w-[80px] ml-[87px] mb-4 mt-1 transition-opacity"></div>
+                <div className="flex justify-normal">
+                  <input
+                    type="text"
+                    placeholder="Cari kehadiran "
+                    value={searchQuery3}
+                    onChange={handleSearchChange3}
+                    className="block border border-gray-300 px-2 py-1 mb-2 rounded-md w-full mr-1"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Cari pengajuan"
+                    value={searchQuery4}
+                    onChange={handleSearchChange4}
+                    className="block border border-gray-300 px-2 py-1 mb-2 rounded-md w-full ml-1"
+                  />
+                </div>
 
                 {/* <table className="border-collapse border-slate-400 border w-full text-left ">
                   <thead className="">
@@ -650,15 +748,15 @@ const RiwayatKehadiran = () => {
                     })}
                   </tbody>
                 </table> */}
-                <div className="flex justify-evenly">
-                  <div className="mr-2">
+                <div className="flex justify-between w-full">
+                  <div className="mr-1  w-full">
                     <table className="border-collapse border-slate-400 border w-full text-left ">
                       <thead className="">
                         <tr>
                           <th className="border border-slate-700 text-center bg-blue-400  h-10">
                             No.
                           </th>
-                          <th className="border border-slate-700 text-center bg-blue-400 py-2">
+                          <th className="border border-slate-700 text-center bg-blue-400 ">
                             Hari/Tanggal
                           </th>
                           <th className="border border-slate-700 text-center bg-blue-400">
@@ -676,7 +774,7 @@ const RiwayatKehadiran = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {kehadiran.map((item, index) => {
+                        {filteredKehadiran2.map((item, index) => {
                           const createdAt = new Date(item.createdAt);
                           if (isThisMonth(createdAt)) {
                             return (
@@ -709,7 +807,7 @@ const RiwayatKehadiran = () => {
                       </tbody>
                     </table>
                   </div>
-                  <div className="ml-2">
+                  <div className="ml-1 w-full">
                     <table className="border border-slate-600 w-full ">
                       <thead>
                         <tr>
@@ -731,7 +829,7 @@ const RiwayatKehadiran = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {pengajuans.map((pengajuan, index) => (
+                        {filteredPengajuans.map((pengajuan, index) => (
                           <tr key={pengajuan && pengajuan.id_pengajuan}>
                             <td className=" text-right pr-2 border-slate-700 border px-3 py-2">
                               {index + 1}.
@@ -739,7 +837,8 @@ const RiwayatKehadiran = () => {
                             <td className=" text-justify border-slate-700 border px-3 py-2">
                               {getDayName(pengajuan && pengajuan.tanggal)}
                               {", "}
-                              {pengajuan && pengajuan.tanggal}
+                              {pengajuan &&
+                                parseAndFormatDateString(pengajuan.tanggal)}
                             </td>
                             <td className=" text-justify border-slate-700 border px-3 py-2">
                               {pengajuan &&
