@@ -9,6 +9,7 @@ const DashboardGuru = () => {
   const { user } = useSelector((state) => state.auth);
 
   const nama = user && user.nama;
+  const sisaCuti = user && user.sisaCuti;
   const [piket, setPiket] = useState([]);
 
   const idUser = (user && user.id_guru) || (user && user.id_kepsek);
@@ -238,6 +239,7 @@ const DashboardGuru = () => {
                     </Link>
                   </li>
                   <br />
+                  <li>Jumlah cuti anda tersisa {sisaCuti} kali</li>
                 </ul>
               </div>
               <div className="w-full md:w-1/2 h-96 px-4 py-2">
@@ -324,12 +326,12 @@ const DashboardGuru = () => {
                   </li>
                   <br />
                   <li>
-                    Apakah sudah mengisi daftar hadir? <br />
+                    ingin melihat data detail guru? <br />
                     <Link
-                      to="/isidaftarhadir"
+                      to="/datagurustaf"
                       className="text-blue-400 text-sm ml-6"
                     >
-                      Daftar Hadir
+                      Daftar Guru
                     </Link>
                   </li>
                   <br />
@@ -474,7 +476,7 @@ const DashboardGuru = () => {
                         No.
                       </th>
                       <th className="border border-slate-700 text-center bg-blue-400">
-                        Hari Tanggal
+                        Nama Guru
                       </th>
                       <th className="border border-slate-700 text-center bg-blue-400">
                         Masuk
@@ -497,9 +499,7 @@ const DashboardGuru = () => {
                               {index + 1}.
                             </td>
                             <td className="border border-slate-600 text-center">
-                              {getDayName(item && item.createdAt)}
-                              {", "}
-                              {item && parseAndFormatDateString(item.createdAt)}
+                              {item && item.Guru && item.Guru.nama}
                             </td>
                             <td className="border border-slate-600 text-center ">
                               {item && extractTime(item.masuk)}

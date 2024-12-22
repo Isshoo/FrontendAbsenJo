@@ -97,6 +97,7 @@ const DataGuruStaf = () => {
 
   const filteredGuru = guru.filter((item) => {
     return (
+      item.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.thnMasuk.includes(searchQuery)
@@ -104,6 +105,7 @@ const DataGuruStaf = () => {
   });
   const filteredKepsek = kepsek.filter((item) => {
     return (
+      item.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.thnMasuk.includes(searchQuery)

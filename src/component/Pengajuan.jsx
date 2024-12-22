@@ -141,7 +141,7 @@ const Pengajuan = () => {
   return (
     <div className="">
       <div className="flex items-center justify-between pr-5">
-        <h1 className="mt-4 mb-3 text-2xl font-bold">Pengajuan</h1>
+        <h1 className="my-4  text-2xl font-bold">Pengajuan</h1>
         <h1 className="text-lg font-bold">{currentYear} Genap</h1>
       </div>
       {user && user.role === "Guru" && (
